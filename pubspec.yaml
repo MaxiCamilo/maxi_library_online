@@ -1,0 +1,28 @@
+name: maxi_library_online
+description: A starting point for Dart libraries or applications.
+publish_to: none
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.5.1
+
+# Add regular dependencies here.
+dependencies:
+  # path: ^1.8.0
+  shelf: ^1.4.2
+  shelf_router: ^1.1.4
+  shelf_plus: ^1.9.2
+  shelf_static: ^1.1.2
+  dart_jsonwebtoken: ^2.14.0
+  crypto: ^3.0.5
+
+  maxi_library:
+  #git:
+    #  url: https://github.com/MaxiCamilo/maxi_library.git
+    #  ref: main
+    path: ../maxi_library
+
+dev_dependencies:
+  lints: ^4.0.0
+  test: ^1.24.0
