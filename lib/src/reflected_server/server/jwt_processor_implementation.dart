@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:maxi_library/maxi_library.dart';
-import 'package:maxi_library_online/src/http_reflected_server/server/interfaces/ijwt_algorithm.dart';
-import 'package:shelf/shelf.dart';
+import 'package:maxi_library_online/src/reflected_server/irequest.dart';
+import 'package:maxi_library_online/src/reflected_server/server/interfaces/ijwt_algorithm.dart';
 
 abstract class JwtProcessorImplementation<T> with IJwtAlgorithm<T> {
   final String secretKey;
   final JWTAlgorithm algorithm;
 
-  Future<T> checkRequestTokerImplementation({required JWT token, required Request request});
-  Future<dynamic> generateTokenImplementation({required Request request});
+  Future<T> checkRequestTokerImplementation({required JWT token, required IRequest request});
+  Future<dynamic> generateTokenImplementation({required IRequest request});
 
   const JwtProcessorImplementation({required this.secretKey, this.algorithm = JWTAlgorithm.HS256});
 
   @override
-  Future<T> checkRequestToker({required Request request}) {
+  Future<T> checkRequestToker({required IRequest request}) {
     final authHeader = request.headers['Authorization'];
 
     if (authHeader == null) {
@@ -39,7 +39,7 @@ abstract class JwtProcessorImplementation<T> with IJwtAlgorithm<T> {
   }
 
   @override
-  Future<String> generateToken({required Request request}) async {
+  Future<String> generateToken({required IRequest request}) async {
     final jwt = JWT(
       await generateTokenImplementation(request: request),
     );
