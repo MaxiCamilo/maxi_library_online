@@ -1,15 +1,34 @@
+@Timeout(Duration(minutes: 30))
+library;
+
+import 'package:maxi_library/maxi_library.dart';
+import 'package:maxi_library_online/maxi_library_online.dart';
 import 'package:test/test.dart';
+
+import 'test.dart';
 
 void main() {
   group('A group of tests', () {
     setUp(() {
-      // Additional setup goes here.
+      ReflectionManager.defineAlbums = [testReflectors];
+      ReflectionManager.defineAsTheMainReflector();
     });
 
-    test('Test url', () {
-      final urlText = 'http://maxi.com/hola/susana?esBueno=21';
-      final url = Uri.parse(urlText);
-      print(url);
+    test('Build server', () async {
+      final server = HttpServerShelf.fromReflection(
+        appName: 'Test',
+        appVersion: 0.420,
+        address: '127.0.0.1',
+        port: 2121,
+      );
+
+      await server.startServer();
+      await server.waitFinish();
+      /*
+      await Future.delayed(Duration(seconds: 90)).whenComplete(() async {
+        await server.closeServer();
+      });
+      */
     });
   });
 }

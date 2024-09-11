@@ -10,7 +10,7 @@ class NegativeResultHttp extends NegativeResult {
     required super.identifier,
     required super.message,
     required this.httpErrorCode,
-    super.whenWas,
+    super.whenWasIt,
     super.cause,
     this.content,
   });
@@ -21,7 +21,7 @@ class NegativeResultHttp extends NegativeResult {
     map['isCorrect'] = false;
     map['message'] = message;
     map['errorType'] = identifier.name;
-    map['whenWas'] = ConverterUtilities.toInt(value: whenWas);
+    map['whenWasIt'] = ConverterUtilities.toInt(value: whenWasIt);
 
     if (content != null) {
       map['content'] = content;

@@ -1,18 +1,33 @@
 import 'dart:convert';
 
-import 'package:maxi_library_online/src/reflected_server/irequest.dart';
-import 'package:shelf_plus/shelf_plus.dart';
+import 'package:maxi_library/maxi_library.dart';
+import 'package:maxi_library_online/src/http_server/irequest.dart';
+import 'package:shelf/shelf.dart';
 
 class RequestShelf with IRequest {
-  final Request request;
+  late final Request request;
+
+  @override
+  late final HttpMethodType methodType;
+
+  RequestShelf({required this.request}) {
+    methodType = switch (request.method.toLowerCase()) {
+      'get' => HttpMethodType.getMethod,
+      'post' => HttpMethodType.postMethod,
+      'put' => HttpMethodType.putMethod,
+      'delete' => HttpMethodType.deleteMethod,
+      _ => throw NegativeResult(
+          identifier: NegativeResultCodes.invalidFunctionality,
+          message: trc('Method %1 has no use on the server', [request.method]),
+        )
+    };
+  }
 
   @override
   final Map<String, dynamic> businessFragments = <String, dynamic>{};
 
   @override
   Map<String, dynamic> get valuesInRoute => <String, dynamic>{};
-
-  RequestShelf({required this.request});
 
   @override
   int get contentLength => request.contentLength ?? 0;
@@ -28,4 +43,5 @@ class RequestShelf with IRequest {
 
   @override
   Future<String> readContentAsString([Encoding? encoding]) => request.readAsString(encoding);
-}
+
+  }

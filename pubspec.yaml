@@ -11,11 +11,11 @@ environment:
 dependencies:
   # path: ^1.8.0
   shelf: ^1.4.2
-  shelf_router: ^1.1.4
-  shelf_plus: ^1.9.2
   shelf_static: ^1.1.2
+  shelf_web_socket: ^2.0.0
   dart_jsonwebtoken: ^2.14.0
   crypto: ^3.0.5
+  meta: ^1.15.0
 
   maxi_library:
   #git:
@@ -25,4 +25,5 @@ dependencies:
 
 dev_dependencies:
   lints: ^4.0.0
+  shelf_router: ^1.1.4
   test: ^1.24.0
