@@ -23,12 +23,16 @@ void main() {
       );
 
       await server.startServer();
-      await server.waitFinish();
+
       /*
-      await Future.delayed(Duration(seconds: 90)).whenComplete(() async {
-        await server.closeServer();
+      Future.delayed(Duration(seconds: 15)).whenComplete(() async {
+        await server.closeServer(forced: true);
       });
       */
+
+      await server.waitFinish();
+
+      //await Future.delayed(Duration(seconds: 30));
     });
   });
 }

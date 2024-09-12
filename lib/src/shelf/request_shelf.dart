@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/http_server/irequest.dart';
+import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
 import 'package:shelf/shelf.dart';
 
 class RequestShelf with IRequest {
+  @override
+  final HttpServerImplementation server;
+
   late final Request request;
 
   @override
   late final HttpMethodType methodType;
 
-  RequestShelf({required this.request}) {
+  RequestShelf({required this.request, required this.server}) {
     methodType = switch (request.method.toLowerCase()) {
       'get' => HttpMethodType.getMethod,
       'post' => HttpMethodType.postMethod,
@@ -43,5 +47,4 @@ class RequestShelf with IRequest {
 
   @override
   Future<String> readContentAsString([Encoding? encoding]) => request.readAsString(encoding);
-
-  }
+}

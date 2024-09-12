@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:maxi_library/maxi_library.dart';
+import 'package:maxi_library_online/src/error_handling/negative_result_http.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
@@ -91,7 +92,14 @@ class WebSocketShelf extends IBidirectionalStream {
 
   @override
   void add(event) {
-    _webSocket.sink.add(event);
+    try {
+      _webSocket.sink.add(_sanitizeEvent(event));
+    } catch (ex) {
+      addError(NegativeResult(
+        identifier: NegativeResultCodes.wrongType,
+        message: trc('An error occurred while serializing a message for client transmission. The object of type %1 cannot be serialized', [event.runtimeType]),
+      ));
+    }
   }
 
   @override
@@ -128,4 +136,38 @@ class WebSocketShelf extends IBidirectionalStream {
 
   @override
   Stream get receiver => _controllerReceiver.stream;
+
+  _sanitizeEvent(content) {
+    if (content is String || content is List<int>) {
+      return content;
+    }
+
+    if (content is Map<String, dynamic>) {
+      return json.encode(content);
+    } else if (content is num || content is bool) {
+      return content.toString();
+    } else if (content is List) {
+      final jsonList = StringBuffer('[');
+      final contentComado = TextUtilities.generateCommand(list: content.map((e) {
+        if (e is Map<String, dynamic>) {
+          return json.encode(e);
+        } else if (ReflectionUtilities.isPrimitive(e.runtimeType) != null) {
+          return e.toString();
+        }
+        final reflItem = ReflectionManager.getReflectionEntity(e.runtimeType);
+        return reflItem.serializeToJson(value: e, setTypeValue: true);
+      }));
+
+      jsonList.write(contentComado);
+      jsonList.write(']');
+      return jsonList.toString();
+    } else if (content is NegativeResultHttp) {
+      return json.encode(content.serialize());
+    } else if (content is NegativeResult) {
+      return json.encode(content.serialize());
+    }
+
+    final reflDio = ReflectionManager.getReflectionEntity(content.runtimeType);
+    return reflDio.serializeToJson(value: content, setTypeValue: true);
+  }
 }

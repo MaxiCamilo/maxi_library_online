@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:maxi_library/maxi_library.dart';
+import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
 
 enum HttpMethodType { postMethod, getMethod, deleteMethod, putMethod }
 
@@ -20,6 +20,8 @@ mixin IRequest {
   Map<String, dynamic> get businessFragments;
 
   Map<String, dynamic> get valuesInRoute;
+
+  HttpServerImplementation get server;
 /*
   Future<dynamic> createWebSocket({
     required Function(IBidirectionalStream) onConnection,

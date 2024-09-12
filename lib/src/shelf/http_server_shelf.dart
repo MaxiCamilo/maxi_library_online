@@ -37,6 +37,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     required double appVersion,
     required Object address,
     required int port,
+    List<IHttpMiddleware> serverMiddleware = const [],
     SecurityContext? securityContext,
     dynamic Function(IRequest)? routeNotFound,
     List<ITypeEntityReflection>? entityList,
@@ -50,7 +51,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
           continue;
         }
 
-        final newMethod = FunctionalRoute.fromReflection(method: method, parent: reflectedClass);
+        final newMethod = FunctionalRoute.fromReflection(serverMiddleware: serverMiddleware, method: method, parent: reflectedClass);
         routes.add(newMethod);
       }
     }
@@ -78,13 +79,13 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
   }
 
   Future<Response> _callRequest(Request rawRequest) {
-    final request = RequestShelf(request: rawRequest);
+    final request = RequestShelf(request: rawRequest, server: this);
     return processRequest(request: request);
   }
 
   @override
-  Future<void> closeServerImplementation() {
-    return _server.close();
+  Future<void> closeServerImplementation({bool forced = false}) {
+    return _server.close(force: forced);
   }
 
   @override
@@ -140,7 +141,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
           return e.toString();
         }
         final reflItem = ReflectionManager.getReflectionEntity(e.runtimeType);
-        return reflItem.serializeToJson(value: e);
+        return reflItem.serializeToJson(value: e, setTypeValue: true);
       }));
 
       jsonList.write(contentComado);
@@ -153,7 +154,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     }
 
     final reflDio = ReflectionManager.getReflectionEntity(content.runtimeType);
-    return _generateSanitizedResponse(content: reflDio.serializeToJson(value: content), idState: idState);
+    return _generateSanitizedResponse(content: reflDio.serializeToJson(value: content, setTypeValue: true), idState: idState);
   }
 
   Response _generateSanitizedResponse({

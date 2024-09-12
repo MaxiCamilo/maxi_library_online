@@ -13,7 +13,7 @@ class FunctionalRoute {
 
   const FunctionalRoute({required this.type, required this.routeGuide, required this.invoker, required this.middleware});
 
-  factory FunctionalRoute.fromReflection({required IMethodReflection method, required ITypeClassReflection parent}) {
+  factory FunctionalRoute.fromReflection({required List<IHttpMiddleware> serverMiddleware, required IMethodReflection method, required ITypeClassReflection parent}) {
     final route = method.annotations.selectByType<HttpRequestMethod>();
     if (route == null) {
       throw NegativeResult(
@@ -37,6 +37,7 @@ class FunctionalRoute {
       routeGuide: parts,
       invoker: FunctionalRouterInvokerReflected(method: method, parent: parent),
       middleware: [
+        ...serverMiddleware,
         ...parent.annotations.whereType<IHttpMiddleware>(),
         ...method.annotations.whereType<IHttpMiddleware>(),
       ],

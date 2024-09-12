@@ -4,10 +4,13 @@ import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
 
 import '../models/person.dart';
+import '../modules/reactive_test.dart';
 
 @reflect
 @HttpRequestClass(route: 'v1/person')
 class PersonApi {
+  static final ReactiveTest _reactive = ReactiveTest();
+
   @HttpRequestMethod(type: HttpMethodType.getMethod, route: '')
   List<Person> getAllPerson() {
     return [
@@ -77,6 +80,16 @@ class PersonApi {
     });
 
     return controller;
+  }
+
+  @HttpRequestMethod(type: HttpMethodType.getMethod, route: 'reactive')
+  ReactiveTest reactive() => _reactive;
+
+  @HttpRequestMethod(type: HttpMethodType.postMethod, route: 'finishServer')
+  void finishServer({required IRequest request}) {
+    scheduleMicrotask(() {
+      request.server.closeServer();
+    });
   }
 
   /*

@@ -28,7 +28,7 @@ abstract class HttpServerImplementation<T> {
   Future<void> startServerImplementation();
 
   @protected
-  Future<void> closeServerImplementation();
+  Future<void> closeServerImplementation({bool forced = false});
 
   Future<void> startServer() async {
     if (_isActive) {
@@ -40,12 +40,12 @@ abstract class HttpServerImplementation<T> {
     _isActive = true;
   }
 
-  Future<void> closeServer() async {
+  Future<void> closeServer({bool forced = false}) async {
     if (!_isActive) {
       return;
     }
-
-    await closeServerImplementation();
+    
+    await closeServerImplementation(forced: forced);
     _waitFinish?.complete();
     _waitFinish = null;
 
@@ -83,7 +83,9 @@ abstract class HttpServerImplementation<T> {
       returnValue = NegativeResult.searchNegativity(item: ex, actionDescription: tr('Execute function'));
     }
 
-    if (returnValue is BidirectionalStreamFactory) {
+    if (returnValue is IReactiveFunctionality) {
+      returnValue = await _generateSocketReactiveByRequest(value: returnValue, request: request);
+    } else if (returnValue is BidirectionalStreamFactory) {
       returnValue = await _generateSocketFactorylByRequest(value: returnValue, request: request);
     } else if (returnValue is IBidirectionalStream) {
       returnValue = await _generateSocketBidirectionalByRequest(value: returnValue, request: request);
@@ -147,6 +149,14 @@ abstract class HttpServerImplementation<T> {
         request: request,
         onConnection: (x) {
           value.initializeStream(receiver: x.receiver, sender: x, closeExternalStreamIfClose: true);
+        });
+  }
+
+  Future _generateSocketReactiveByRequest({required IReactiveFunctionality value, required IRequest request}) {
+    return createWebSocket(
+        request: request,
+        onConnection: (x) {
+          value.connect(input: x.receiver, output: x);
         });
   }
 }
