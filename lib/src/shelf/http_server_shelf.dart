@@ -75,7 +75,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
 
   @override
   Future<void> startServerImplementation() async {
-    _server = await serve(_callRequest, address, port);
+    _server = await serve(_callRequest, address, port, securityContext: securityContext);
   }
 
   Future<Response> _callRequest(Request rawRequest) {

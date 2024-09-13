@@ -15,11 +15,18 @@ void main() {
     });
 
     test('Build server', () async {
+      /*
+      final securityContext = SecurityContext()
+        ..useCertificateChain('./cert.pem') // Ruta a tu certificado
+        ..usePrivateKey('./key.pem'); // Ruta a tu clave privada
+        */
+
       final server = HttpServerShelf.fromReflection(
         appName: 'Test',
         appVersion: 0.420,
         address: '127.0.0.1',
         port: 2121,
+        //securityContext: securityContext,
       );
 
       await server.startServer();
