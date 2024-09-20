@@ -16,6 +16,7 @@ dependencies:
   dart_jsonwebtoken: ^2.14.0
   crypto: ^3.0.5
   meta: ^1.15.0
+  http: ^1.2.2
 
   maxi_library:
   #git:

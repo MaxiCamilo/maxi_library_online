@@ -69,6 +69,7 @@ Handler _authenticate(Handler handler) {
       final token = authHeader.substring(7);
       try {
         final jwt = JWT.verify(token, SecretKey(secretKey));
+        print(jwt);
 
         // Puedes acceder a los datos del token con jwt.payload
 
