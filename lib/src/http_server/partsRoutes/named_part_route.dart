@@ -16,25 +16,25 @@ class NamedPartRoute with IPartRoute {
   void addValue({required String part, required Map<String, dynamic> namedValues}) {
     switch (type) {
       case PrimitiesType.isInt:
-        namedValues[name] = part.convertQuickly.toInt(propertyName: name);
+        namedValues[name] = part.convertQuickly.toInt(propertyName: tr(name));
         break;
       case PrimitiesType.isDouble:
-        namedValues[name] = part.convertQuickly.toDouble(propertyName: name);
+        namedValues[name] = part.convertQuickly.toDouble(propertyName: tr(name));
         break;
       case PrimitiesType.isNum:
-        namedValues[name] = part.convertQuickly.toDouble(propertyName: name);
+        namedValues[name] = part.convertQuickly.toDouble(propertyName: tr(name));
         break;
       case PrimitiesType.isString:
         namedValues[name] = part;
         break;
       case PrimitiesType.isBoolean:
-        namedValues[name] = part.convertQuickly.toBoolean(propertyName: name);
+        namedValues[name] = part.convertQuickly.toBoolean(propertyName: tr(name));
         break;
       case PrimitiesType.isDateTime:
-        namedValues[name] = part.convertQuickly.toDateTime(propertyName: name);
+        namedValues[name] = part.convertQuickly.toDateTime(propertyName: tr(name));
         break;
       case PrimitiesType.isBinary:
-        throw NegativeResult(identifier: NegativeResultCodes.implementationFailure, message: '¡Binary interpretation was not created!');
+        throw NegativeResult(identifier: NegativeResultCodes.implementationFailure, message: tr('¡Binary interpretation was not created!'));
     }
   }
 }

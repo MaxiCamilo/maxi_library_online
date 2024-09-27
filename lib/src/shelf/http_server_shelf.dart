@@ -97,7 +97,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
           idState: 500,
           content: NegativeResult(
             identifier: NegativeResultCodes.implementationFailure,
-            message: trc('The serialization of the output from the called function failed with the following error: %1', [ex.toString()]),
+            message: tr('The serialization of the output from the called function failed with the following error: %1', [ex.toString()]),
           ));
     }
   }
@@ -131,7 +131,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     } else if (content is num || content is bool) {
       return Response.ok(content.toString());
     } else if (content is Uint8List) {
-      return _generateSanitizedResponse(content: content, contentType: ContentType.contentTypeBinary, idState: idState);
+      return _generateSanitizedResponse(content: content, contentType: PetitionContentType.binary, idState: idState);
     } else if (content is List) {
       final jsonList = StringBuffer('[');
       final contentComado = TextUtilities.generateCommand(list: content.map((e) {
@@ -160,7 +160,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
   Response _generateSanitizedResponse({
     int idState = 200,
     dynamic content,
-    String contentType = ContentType.contentTypeJson,
+    String contentType = PetitionContentType.json,
     Map<String, String> extraHeader = const {},
   }) {
     final cabezal = {'content-type': contentType, 'x-app-version': appVersion.toString(), 'x-app-name': appName};

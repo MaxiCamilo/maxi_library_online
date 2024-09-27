@@ -18,7 +18,7 @@ class FunctionalRoute {
     if (route == null) {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidValue,
-        message: trc('Method %1 of class %2 does not have a "HttpRequestMethod" decorator', [method.name, parent.name]),
+        message: tr('Method %1 of class %2 does not have a "HttpRequestMethod" decorator', [method.name, parent.name]),
       );
     }
 

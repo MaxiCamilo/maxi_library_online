@@ -33,7 +33,7 @@ abstract class JwtProcessorImplementation<T> with IJwtAlgorithm<T> {
     }
 
     final tokenText = authHeader.substring(7);
-    final token = volatile(detail: () => tr('The authentication token is invalid, is not a valid JWT format'), function: () => JWT.verify(tokenText, SecretKey(secretKey)));
+    final token = volatile(detail:  tr('The authentication token is invalid, is not a valid JWT format'), function: () => JWT.verify(tokenText, SecretKey(secretKey)));
 
     return checkRequestTokerImplementation(request: request, token: token);
   }

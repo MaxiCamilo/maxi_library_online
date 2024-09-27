@@ -97,7 +97,7 @@ class WebSocketShelf extends IBidirectionalStream {
     } catch (ex) {
       addError(NegativeResult(
         identifier: NegativeResultCodes.wrongType,
-        message: trc('An error occurred while serializing a message for client transmission. The object of type %1 cannot be serialized', [event.runtimeType]),
+        message: tr('An error occurred while serializing a message for client transmission. The object of type %1 cannot be serialized', [event.runtimeType]),
       ));
     }
   }

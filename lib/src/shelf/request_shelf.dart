@@ -22,7 +22,7 @@ class RequestShelf with IRequest {
       'delete' => HttpMethodType.deleteMethod,
       _ => throw NegativeResult(
           identifier: NegativeResultCodes.invalidFunctionality,
-          message: trc('Method %1 has no use on the server', [request.method]),
+          message: tr('Method %1 has no use on the server', [request.method]),
         )
     };
   }
