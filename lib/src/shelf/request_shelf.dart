@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/http_server/irequest.dart';
@@ -14,7 +15,11 @@ class RequestShelf with IRequest {
   @override
   late final HttpMethodType methodType;
 
+  @override
+  late final Map<String, dynamic> valuesInRoute;
+
   RequestShelf({required this.request, required this.server}) {
+    valuesInRoute = Map.from(request.url.queryParameters);
     methodType = switch (request.method.toLowerCase()) {
       'get' => HttpMethodType.getMethod,
       'post' => HttpMethodType.postMethod,
@@ -31,9 +36,6 @@ class RequestShelf with IRequest {
   final Map<String, dynamic> businessFragments = <String, dynamic>{};
 
   @override
-  Map<String, dynamic> get valuesInRoute => <String, dynamic>{};
-
-  @override
   int get contentLength => request.contentLength ?? 0;
 
   @override
@@ -47,4 +49,9 @@ class RequestShelf with IRequest {
 
   @override
   Future<String> readContentAsString([Encoding? encoding]) => request.readAsString(encoding);
+
+  @override
+  bool get isWebSocket {
+    return methodType == HttpMethodType.getMethod && (request.headers[HttpHeaders.upgradeHeader] ?? '').toLowerCase() == 'websocket';
+  }
 }

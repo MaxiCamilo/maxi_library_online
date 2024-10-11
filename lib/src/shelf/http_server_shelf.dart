@@ -110,7 +110,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       return _generateSanitizedResponse(
           idState: idState,
           content: json.encode({
-            'message': tr('The requested function has completed successfully'),
+            'message': tr('The requested function has completed successfully').serialize(),
             'whenWasIt': DateTime.now().millisecondsSinceEpoch,
           }));
     }

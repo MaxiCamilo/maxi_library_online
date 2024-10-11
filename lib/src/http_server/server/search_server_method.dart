@@ -32,6 +32,10 @@ class SearchServerMethod {
       parts.removeLast();
     }
 
+    if (parts.isEmpty) {
+      parts.add('');
+    }
+
     final candidates = selectedList.where((x) => x.isCompatible(parts: parts)).toList();
 
     if (candidates.isEmpty) {

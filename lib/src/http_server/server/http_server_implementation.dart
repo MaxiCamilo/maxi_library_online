@@ -44,7 +44,7 @@ abstract class HttpServerImplementation<T> {
     if (!_isActive) {
       return;
     }
-    
+
     await closeServerImplementation(forced: forced);
     _waitFinish?.complete();
     _waitFinish = null;
@@ -104,7 +104,7 @@ abstract class HttpServerImplementation<T> {
       return await routeNotFound(request);
     }
 
-    final values = method.addValues(request: request);
+    final values = request.valuesInRoute;
     for (final midd in method.middleware) {
       await midd.invokeMiddleware(namedValues: values, request: request);
     }

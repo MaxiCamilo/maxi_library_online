@@ -62,6 +62,8 @@ class FunctionalRoute {
     return true;
   }
 
+  
+  /*
   Map<String, dynamic> addValues({required IRequest request}) {
     if (request.url.path == '') {
       return <String, dynamic>{};
@@ -77,4 +79,5 @@ class FunctionalRoute {
 
     return values;
   }
+  */
 }

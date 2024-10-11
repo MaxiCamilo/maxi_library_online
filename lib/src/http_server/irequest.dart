@@ -22,6 +22,8 @@ mixin IRequest {
   Map<String, dynamic> get valuesInRoute;
 
   HttpServerImplementation get server;
+
+  bool get isWebSocket;
 /*
   Future<dynamic> createWebSocket({
     required Function(IBidirectionalStream) onConnection,
