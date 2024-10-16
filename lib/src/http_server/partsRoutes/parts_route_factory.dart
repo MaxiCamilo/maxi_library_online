@@ -14,6 +14,14 @@ class PartsRouteFactory {
       rawParts.removeLast();
     }
 
+    if (rawParts.first == '') {
+      rawParts.removeAt(0);
+    }
+
+    if (rawParts.isEmpty) {
+      rawParts.add('');
+    }
+
     final list = <IPartRoute>[];
 
     for (final raw in rawParts) {

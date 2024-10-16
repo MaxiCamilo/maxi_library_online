@@ -48,7 +48,18 @@ class RequestShelf with IRequest {
   Stream<List<int>> get readContent => request.read();
 
   @override
-  Future<String> readContentAsString([Encoding? encoding]) => request.readAsString(encoding);
+  Future<String> readContentAsString({int? maxSize, Encoding? encoding}) {
+    if (maxSize != null) {
+      if (request.contentLength != null && maxSize < request.contentLength!) {
+        throw NegativeResult(
+          identifier: NegativeResultCodes.invalidValue,
+          message: tr('The content of the request is too large (Accepts up to %1 bytes, but %2 bytes were trying to be sent)', [maxSize, request.contentLength]),
+        );
+      }
+    }
+
+    return request.readAsString(encoding);
+  }
 
   @override
   bool get isWebSocket {

@@ -1,6 +1,7 @@
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
 import 'package:maxi_library_online/src/http_server/partsRoutes/fixed_part_route.dart';
+import 'package:maxi_library_online/src/http_server/partsRoutes/named_part_route.dart';
 import 'package:maxi_library_online/src/http_server/server/functional_route.dart';
 
 class SearchServerMethod {
@@ -18,7 +19,7 @@ class SearchServerMethod {
     deleteRoutes = routes.where((x) => x.type == HttpMethodType.deleteMethod).toList(growable: false);
   }
 
-  FunctionalRoute? search({required IRequest request}) {
+  (FunctionalRoute?, Map<String, dynamic>) search({required IRequest request}) {
     final selectedList = switch (request.methodType) {
       HttpMethodType.postMethod => postRoutes,
       HttpMethodType.getMethod => getsRoutes,
@@ -27,6 +28,7 @@ class SearchServerMethod {
     };
 
     final parts = request.url.path.split('/');
+    final namedParameters = <String, dynamic>{};
 
     if (parts.isNotEmpty && parts.last.isEmpty) {
       parts.removeLast();
@@ -38,13 +40,27 @@ class SearchServerMethod {
 
     final candidates = selectedList.where((x) => x.isCompatible(parts: parts)).toList();
 
+    late final FunctionalRoute selected;
+
     if (candidates.isEmpty) {
-      return null;
+      return (null, namedParameters);
     } else if (candidates.length == 1) {
-      return candidates.first;
+      selected = candidates.first;
     } else {
-      return _getBestCandidate(candidates: candidates, request: request);
+      final posible = _getBestCandidate(candidates: candidates, request: request);
+      if (posible == null) {
+        return (null, namedParameters);
+      }
+
+      selected = posible;
     }
+
+    for (int i = 0; i < parts.length; i++) {
+      if (selected.routeGuide[i] is NamedPartRoute) {
+        (selected.routeGuide[i] as NamedPartRoute).addValue(part: parts[i], namedValues: namedParameters);
+      }
+    }
+    return (selected, namedParameters);
   }
 
   FunctionalRoute? _getBestCandidate({required IRequest request, required List<FunctionalRoute> candidates}) {

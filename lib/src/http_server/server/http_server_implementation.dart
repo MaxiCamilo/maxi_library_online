@@ -99,12 +99,14 @@ abstract class HttpServerImplementation<T> {
   }
 
   Future _makeInvocation(IRequest request) async {
-    final method = _searcher.search(request: request);
+    final (method, namedPart) = _searcher.search(request: request);
     if (method == null) {
       return await routeNotFound(request);
     }
 
-    final values = request.valuesInRoute;
+    final values = Map.of(request.valuesInRoute);
+    values.addAll(namedPart);
+
     for (final midd in method.middleware) {
       await midd.invokeMiddleware(namedValues: values, request: request);
     }

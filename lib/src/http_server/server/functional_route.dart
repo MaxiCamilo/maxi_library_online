@@ -32,6 +32,8 @@ class FunctionalRoute {
 
     final parts = PartsRouteFactory.build(route: bufferRoute.toString()).parts;
 
+    
+
     return FunctionalRoute(
       type: route.type,
       routeGuide: parts,

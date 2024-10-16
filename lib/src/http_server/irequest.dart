@@ -15,7 +15,7 @@ mixin IRequest {
 
   Stream<List<int>> get readContent;
 
-  Future<String> readContentAsString([Encoding? encoding]);
+  Future<String> readContentAsString({int? maxSize, Encoding? encoding});
 
   Map<String, dynamic> get businessFragments;
 
@@ -24,6 +24,7 @@ mixin IRequest {
   HttpServerImplementation get server;
 
   bool get isWebSocket;
+
 /*
   Future<dynamic> createWebSocket({
     required Function(IBidirectionalStream) onConnection,

@@ -125,7 +125,7 @@ class WebSocketShelf extends IBidirectionalStream {
       return;
     }
     _controllerReceiver.close();
-    return await _webSocket.innerWebSocket.close();
+    return await _webSocket.sink.close();
   }
 
   @override
