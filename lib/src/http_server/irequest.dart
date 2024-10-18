@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
 
-enum HttpMethodType { postMethod, getMethod, deleteMethod, putMethod }
+enum HttpMethodType { postMethod, getMethod, deleteMethod, putMethod, anyMethod }
 
 mixin IRequest {
   HttpMethodType get methodType;
@@ -24,6 +25,15 @@ mixin IRequest {
   HttpServerImplementation get server;
 
   bool get isWebSocket;
+
+  void checkOnlyWebSocket() {
+    if (!isWebSocket) {
+      throw NegativeResult(
+        identifier: NegativeResultCodes.invalidFunctionality,
+        message: tr('This function only supports execution via WebSocket'),
+      );
+    }
+  }
 
 /*
   Future<dynamic> createWebSocket({

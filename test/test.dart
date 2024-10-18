@@ -12,9 +12,8 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart';
 import 'dart:async';
-import 'dart:developer';
 import 'package:maxi_library/export_reflectors.dart';
-import 'modules/reactive_test.dart';
+import 'dart:developer';
 import 'apis/person_api.dart';
 import 'models/person.dart';
 
@@ -408,91 +407,6 @@ entity!.interact();
 }
 
 
-class _PersonApibidirectionalMethod extends GeneratedReflectedMethod<PersonApi, BidirectionalStreamFactory> {
-const _PersonApibidirectionalMethod();
-@override
-String get name => 'bidirectional';
-
-@override
-bool get isStatic => false;
-
-@override
-MethodDetectedType get methodType => MethodDetectedType.commonMethod;
-
-@override
-List get annotations => const [HttpRequestMethod(type: HttpMethodType.getMethod, route: 'bidirectional')];
-
-@override
-List<GeneratedReflectedFixedParameter> get fixedParameters => const [];
-
-@override
-List<GeneratedReflectedNamedParameter> get namedParameters => const [];
-
-@override
-BidirectionalStreamFactory callReservedMethod({required PersonApi? entity, required List fixedValues, required Map<String, dynamic> namedValues}) =>
-entity!.bidirectional();
-}
-
-
-class _PersonApireactiveMethod extends GeneratedReflectedMethod<PersonApi, ReactiveTest> {
-const _PersonApireactiveMethod();
-@override
-String get name => 'reactive';
-
-@override
-bool get isStatic => false;
-
-@override
-MethodDetectedType get methodType => MethodDetectedType.commonMethod;
-
-@override
-List get annotations => const [HttpRequestMethod(type: HttpMethodType.getMethod, route: 'reactive')];
-
-@override
-List<GeneratedReflectedFixedParameter> get fixedParameters => const [];
-
-@override
-List<GeneratedReflectedNamedParameter> get namedParameters => const [];
-
-@override
-ReactiveTest callReservedMethod({required PersonApi? entity, required List fixedValues, required Map<String, dynamic> namedValues}) =>
-entity!.reactive();
-}
-
-
-class _PersonApifinishServerMethod extends GeneratedReflectedMethod<PersonApi, dynamic> {
-const _PersonApifinishServerMethod();
-@override
-String get name => 'finishServer';
-
-@override
-bool get isStatic => false;
-
-@override
-MethodDetectedType get methodType => MethodDetectedType.commonMethod;
-
-@override
-List get annotations => const [HttpRequestMethod(type: HttpMethodType.postMethod, route: 'finishServer')];
-
-static const _namrequest = GeneratedReflectedNamedParameter<IRequest>(
-      annotations: const [],
-      defaultValue: null,
-      hasDefaultValue: false,
-      acceptNulls: false,
-      name: 'request',
-)
-;@override
-List<GeneratedReflectedFixedParameter> get fixedParameters => const [];
-
-@override
-List<GeneratedReflectedNamedParameter> get namedParameters => const [_namrequest];
-
-@override
-dynamic callReservedMethod({required PersonApi? entity, required List fixedValues, required Map<String, dynamic> namedValues}) =>
-entity!.finishServer(request: _namrequest.getValueFromMap(namedValues),);
-}
-
-
 class _PersonApiBuilder extends GeneratedReflectedMethod<PersonApi, PersonApi> {
 const _PersonApiBuilder();
 @override
@@ -542,7 +456,7 @@ bool get isMixin => false;
 String get name => 'PersonApi';
 
 @override
-List<GeneratedReflectedMethod> get methods => const [_PersonApigetAllPersonMethod(),_PersonApigetSpecificPersonMethod(),_PersonApisayHiMethod(),_PersonApigetContentMethod(),_PersonApistreamNumbersMethod(),_PersonApiinteractMethod(),_PersonApibidirectionalMethod(),_PersonApireactiveMethod(),_PersonApifinishServerMethod(),_PersonApiBuilder()];
+List<GeneratedReflectedMethod> get methods => const [_PersonApigetAllPersonMethod(),_PersonApigetSpecificPersonMethod(),_PersonApisayHiMethod(),_PersonApigetContentMethod(),_PersonApistreamNumbersMethod(),_PersonApiinteractMethod(),_PersonApiBuilder()];
 
 @override
 List<GeneratedReflectedField> get fields => const [];

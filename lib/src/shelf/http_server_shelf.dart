@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -8,6 +9,7 @@ import 'package:maxi_library_online/src/error_handling/negative_result_http.dart
 import 'package:maxi_library_online/src/http_server/response_http.dart';
 import 'package:maxi_library_online/src/http_server/server/functional_route.dart';
 import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
+import 'package:maxi_library_online/src/http_server/server/interfaces/iweb_socket.dart';
 import 'package:maxi_library_online/src/shelf/web_socket_shelf.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -153,6 +155,10 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       return _generateSanitizedResponse(content: json.encode(content.serialize()), idState: 400);
     }
 
+    if (content is ICustomSerialization) {
+      return content.serialize();
+    }
+
     final reflDio = ReflectionManager.getReflectionEntity(content.runtimeType);
     return _generateSanitizedResponse(content: reflDio.serializeToJson(value: content, setTypeValue: true), idState: idState);
   }
@@ -172,10 +178,9 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     return Response(idState, body: content, headers: cabezal);
   }
 
-  @override
   Future createWebSocket({
     required IRequest request,
-    required Function(IBidirectionalStream) onConnection,
+    required Function(IWebSocket) onConnection,
     Iterable<String>? protocols,
     Iterable<String>? allowedOrigins,
     Duration? pingInterval,
@@ -187,6 +192,76 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       protocols: protocols,
       allowedOrigins: allowedOrigins,
       pingInterval: pingInterval,
+    );
+  }
+
+  @override
+  Future createWebSocketForPipe({required IRequest request, required ThreadPipe pipe, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
+    return createWebSocket(
+      request: request,
+      allowedOrigins: allowedOrigins,
+      pingInterval: pingInterval,
+      protocols: protocols,
+      onConnection: (ws) async {
+        try {
+          await pipe.initialize();
+
+          pipe.stream.listen((x) {
+            ws.add(x);
+          }, onError: ws.addError);
+
+          ws.stream.listen((x) {
+            pipe.add(x);
+          }, onError: pipe.addError);
+
+          ws.done.whenComplete(() => pipe.close());
+          pipe.done.whenComplete(() => ws.close());
+        } catch (ex) {
+          final rn = NegativeResult.searchNegativity(item: ex, actionDescription: tr('Creating a pipe connection'));
+          ws.add(rn.serializeToJson());
+          ws.close();
+        }
+      },
+    );
+  }
+
+  @override
+  Future createWebSocketForSink({required IRequest request, required StreamSink sink, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
+    return createWebSocket(
+      request: request,
+      allowedOrigins: allowedOrigins,
+      pingInterval: pingInterval,
+      protocols: protocols,
+      onConnection: (ws) async {
+        ws.stream.listen(sink.add, onError: sink.addError, onDone: () {
+          sink.close();
+        });
+
+        sink.done.whenComplete(() {
+          ws.close();
+        });
+      },
+    );
+  }
+
+  @override
+  Future createWebSocketForStream({required IRequest request, required Stream stream, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
+    return createWebSocket(
+      request: request,
+      allowedOrigins: allowedOrigins,
+      pingInterval: pingInterval,
+      protocols: protocols,
+      onConnection: (ws) async {
+        final subcription = stream.listen(
+          ws.add,
+          onError: ws.addError,
+          onDone: () {
+            ws.close();
+          },
+        );
+
+        ws.done.whenComplete(() => subcription.cancel());
+      },
     );
   }
 }

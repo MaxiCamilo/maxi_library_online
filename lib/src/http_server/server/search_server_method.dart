@@ -17,6 +17,7 @@ class SearchServerMethod {
     postRoutes = routes.where((x) => x.type == HttpMethodType.postMethod).toList(growable: false);
     putRoutes = routes.where((x) => x.type == HttpMethodType.putMethod).toList(growable: false);
     deleteRoutes = routes.where((x) => x.type == HttpMethodType.deleteMethod).toList(growable: false);
+    
   }
 
   (FunctionalRoute?, Map<String, dynamic>) search({required IRequest request}) {
@@ -25,6 +26,7 @@ class SearchServerMethod {
       HttpMethodType.getMethod => getsRoutes,
       HttpMethodType.deleteMethod => deleteRoutes,
       HttpMethodType.putMethod => putRoutes,
+      HttpMethodType.anyMethod => routes,
     };
 
     final parts = request.url.path.split('/');

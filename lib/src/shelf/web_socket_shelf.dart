@@ -4,13 +4,14 @@ import 'dart:io';
 
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/error_handling/negative_result_http.dart';
+import 'package:maxi_library_online/src/http_server/server/interfaces/iweb_socket.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
-class WebSocketShelf extends IBidirectionalStream {
+class WebSocketShelf with IWebSocket {
   static Future<Response> makeWebSocket({
     required Request request,
-    required Function(IBidirectionalStream) onConnect,
+    required Function(IWebSocket) onConnect,
     Iterable<String>? protocols,
     Iterable<String>? allowedOrigins,
     Duration? pingInterval,
@@ -72,7 +73,7 @@ class WebSocketShelf extends IBidirectionalStream {
     )(request);
   }
 
-  static _onConnection({required dynamic webSocket, required Function(IBidirectionalStream) streamReturner}) {
+  static _onConnection({required dynamic webSocket, required Function(IWebSocket) streamReturner}) {
     final newSocket = WebSocketShelf._(webSocket: webSocket);
     streamReturner(newSocket);
   }
@@ -135,7 +136,7 @@ class WebSocketShelf extends IBidirectionalStream {
   bool get isActive => !_controllerReceiver.isClosed;
 
   @override
-  Stream get receiver => _controllerReceiver.stream;
+  Stream get stream => _controllerReceiver.stream;
 
   _sanitizeEvent(content) {
     if (content is String || content is List<int>) {
@@ -165,6 +166,8 @@ class WebSocketShelf extends IBidirectionalStream {
       return json.encode(content.serialize());
     } else if (content is NegativeResult) {
       return json.encode(content.serialize());
+    } else if (content is ICustomSerialization) {
+      return _sanitizeEvent(content.serialize());
     }
 
     final reflDio = ReflectionManager.getReflectionEntity(content.runtimeType);

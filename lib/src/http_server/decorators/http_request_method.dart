@@ -5,4 +5,6 @@ class HttpRequestMethod {
   final String route;
 
   const HttpRequestMethod({required this.type, required this.route});
+
+  
 }

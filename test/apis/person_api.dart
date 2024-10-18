@@ -4,12 +4,10 @@ import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
 
 import '../models/person.dart';
-import '../modules/reactive_test.dart';
 
 @reflect
 @HttpRequestClass(route: 'v1/person')
 class PersonApi {
-  static final ReactiveTest _reactive = ReactiveTest();
 
   @HttpRequestMethod(type: HttpMethodType.getMethod, route: '')
   List<Person> getAllPerson() {
@@ -67,30 +65,10 @@ class PersonApi {
     return controller;
   }
 
-  @HttpRequestMethod(type: HttpMethodType.getMethod, route: 'bidirectional')
-  BidirectionalStreamFactory bidirectional() {
-    final controller = BidirectionalStreamFactory();
+  
 
-    controller.waitInitialize().whenComplete(() {
-      controller.receiver.listen((x) => print('Client sent $x'));
 
-      controller.addStream(streamNumbers());
 
-      //Future.delayed(Duration(seconds: 10)).whenComplete(() => controller.close());
-    });
-
-    return controller;
-  }
-
-  @HttpRequestMethod(type: HttpMethodType.getMethod, route: 'reactive')
-  ReactiveTest reactive() => _reactive;
-
-  @HttpRequestMethod(type: HttpMethodType.postMethod, route: 'finishServer')
-  void finishServer({required IRequest request}) {
-    scheduleMicrotask(() {
-      request.server.closeServer();
-    });
-  }
 
   /*
   @HttpRequestMethod(type: HttpMethodType.getMethod, route: 'socket')

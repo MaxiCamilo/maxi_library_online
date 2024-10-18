@@ -83,16 +83,12 @@ abstract class HttpServerImplementation<T> {
       returnValue = NegativeResult.searchNegativity(item: ex, actionDescription: tr('Execute function'));
     }
 
-    if (returnValue is IReactiveFunctionality) {
-      returnValue = await _generateSocketReactiveByRequest(value: returnValue, request: request);
-    } else if (returnValue is BidirectionalStreamFactory) {
-      returnValue = await _generateSocketFactorylByRequest(value: returnValue, request: request);
-    } else if (returnValue is IBidirectionalStream) {
-      returnValue = await _generateSocketBidirectionalByRequest(value: returnValue, request: request);
+    if (returnValue is ThreadPipe) {
+      returnValue = await createWebSocketForPipe(pipe: returnValue, request: request);
     } else if (returnValue is Stream) {
-      returnValue = await _generateSocketStreamByRequest(value: returnValue, request: request);
+      returnValue = await createWebSocketForStream(stream: returnValue, request: request);
     } else if (returnValue is StreamSink) {
-      returnValue = await _generateSocketSinkByRequest(value: returnValue, request: request);
+      returnValue = await createWebSocketForSink(request: request, sink: returnValue);
     }
 
     return generateReturnPackage(returnValue);
@@ -114,14 +110,30 @@ abstract class HttpServerImplementation<T> {
     return await method.invoker.invokeMethod(namedValues: values, request: request);
   }
 
-  Future<dynamic> createWebSocket({
+  Future<dynamic> createWebSocketForStream({
     required IRequest request,
-    required Function(IBidirectionalStream) onConnection,
+    required Stream stream,
     Iterable<String>? protocols,
     Iterable<String>? allowedOrigins,
     Duration? pingInterval,
   });
 
+  Future<dynamic> createWebSocketForSink({
+    required IRequest request,
+    required StreamSink sink,
+    Iterable<String>? protocols,
+    Iterable<String>? allowedOrigins,
+    Duration? pingInterval,
+  });
+
+  Future<dynamic> createWebSocketForPipe({
+    required IRequest request,
+    required ThreadPipe pipe,
+    Iterable<String>? protocols,
+    Iterable<String>? allowedOrigins,
+    Duration? pingInterval,
+  });
+/*
   Future _generateSocketStreamByRequest({required Stream value, required IRequest request}) {
     return createWebSocket(
         request: request,
@@ -129,36 +141,5 @@ abstract class HttpServerImplementation<T> {
           x.joinWithStream(stream: value, selfCloseIfStreamClosed: true);
         });
   }
-
-  Future _generateSocketSinkByRequest({required StreamSink value, required IRequest request}) {
-    return createWebSocket(
-        request: request,
-        onConnection: (x) {
-          x.joinWithSick(sink: value, closeExternalStreamIfClose: true);
-        });
-  }
-
-  Future _generateSocketBidirectionalByRequest({required IBidirectionalStream value, required IRequest request}) {
-    return createWebSocket(
-        request: request,
-        onConnection: (x) {
-          x.joinWithOther(other: value, closeExternalStreamIfClose: true, selfCloseIfStreamClosed: true);
-        });
-  }
-
-  Future _generateSocketFactorylByRequest({required BidirectionalStreamFactory value, required IRequest request}) {
-    return createWebSocket(
-        request: request,
-        onConnection: (x) {
-          value.initializeStream(receiver: x.receiver, sender: x, closeExternalStreamIfClose: true);
-        });
-  }
-
-  Future _generateSocketReactiveByRequest({required IReactiveFunctionality value, required IRequest request}) {
-    return createWebSocket(
-        request: request,
-        onConnection: (x) {
-          value.connect(input: x.receiver, output: x);
-        });
-  }
+  */
 }
