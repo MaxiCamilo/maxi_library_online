@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/http_server/irequest.dart';
@@ -20,16 +21,21 @@ class RequestShelf with IRequest {
 
   RequestShelf({required this.request, required this.server}) {
     valuesInRoute = Map.from(request.url.queryParameters);
-    methodType = switch (request.method.toLowerCase()) {
-      'get' => HttpMethodType.getMethod,
-      'post' => HttpMethodType.postMethod,
-      'put' => HttpMethodType.putMethod,
-      'delete' => HttpMethodType.deleteMethod,
-      _ => throw NegativeResult(
-          identifier: NegativeResultCodes.invalidFunctionality,
-          message: tr('Method %1 has no use on the server', [request.method]),
-        )
-    };
+
+    if ((request.headers[HttpHeaders.upgradeHeader] ?? '').toLowerCase() == 'websocket') {
+      methodType = HttpMethodType.webSocket;
+    } else {
+      methodType = switch (request.method.toLowerCase()) {
+        'get' => HttpMethodType.getMethod,
+        'post' => HttpMethodType.postMethod,
+        'put' => HttpMethodType.putMethod,
+        'delete' => HttpMethodType.deleteMethod,
+        _ => throw NegativeResult(
+            identifier: NegativeResultCodes.invalidFunctionality,
+            message: tr('Method %1 has no use on the server', [request.method]),
+          )
+      };
+    }
   }
 
   @override
@@ -64,5 +70,29 @@ class RequestShelf with IRequest {
   @override
   bool get isWebSocket {
     return methodType == HttpMethodType.getMethod && (request.headers[HttpHeaders.upgradeHeader] ?? '').toLowerCase() == 'websocket';
+  }
+
+  @override
+  Future<Uint8List> readContentAsBinary({int? maxSize}) async {
+    if (contentLength == 0) {
+      return Uint8List.fromList([]);
+    }
+
+    if (maxSize != null) {
+      if (maxSize < request.contentLength!) {
+        throw NegativeResult(
+          identifier: NegativeResultCodes.invalidValue,
+          message: tr('The content of the request is too large (Accepts up to %1 bytes, but %2 bytes were trying to be sent)', [maxSize, request.contentLength]),
+        );
+      }
+    }
+
+    final buffer = <int>[];
+
+    await for (final part in readContent) {
+      buffer.addAll(part);
+    }
+
+    return Uint8List.fromList(buffer);
   }
 }

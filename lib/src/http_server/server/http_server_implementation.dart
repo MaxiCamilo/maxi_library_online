@@ -83,7 +83,7 @@ abstract class HttpServerImplementation<T> {
       returnValue = NegativeResult.searchNegativity(item: ex, actionDescription: tr('Execute function'));
     }
 
-    if (returnValue is ThreadPipe) {
+    if (returnValue is IPipe) {
       returnValue = await createWebSocketForPipe(pipe: returnValue, request: request);
     } else if (returnValue is Stream) {
       returnValue = await createWebSocketForStream(stream: returnValue, request: request);
@@ -128,7 +128,7 @@ abstract class HttpServerImplementation<T> {
 
   Future<dynamic> createWebSocketForPipe({
     required IRequest request,
-    required ThreadPipe pipe,
+    required IPipe pipe,
     Iterable<String>? protocols,
     Iterable<String>? allowedOrigins,
     Duration? pingInterval,

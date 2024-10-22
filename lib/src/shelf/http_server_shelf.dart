@@ -196,7 +196,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
   }
 
   @override
-  Future createWebSocketForPipe({required IRequest request, required ThreadPipe pipe, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
+  Future createWebSocketForPipe({required IRequest request, required IPipe pipe, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
     return createWebSocket(
       request: request,
       allowedOrigins: allowedOrigins,
@@ -204,7 +204,9 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       protocols: protocols,
       onConnection: (ws) async {
         try {
-          await pipe.initialize();
+          if (pipe is StartableFunctionality) {
+            await (pipe as StartableFunctionality).initialize();
+          }
 
           pipe.stream.listen((x) {
             ws.add(x);
@@ -243,7 +245,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       },
     );
   }
-
+  
   @override
   Future createWebSocketForStream({required IRequest request, required Stream stream, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
     return createWebSocket(

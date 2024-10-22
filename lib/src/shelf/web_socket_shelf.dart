@@ -139,6 +139,10 @@ class WebSocketShelf with IWebSocket {
   Stream get stream => _controllerReceiver.stream;
 
   _sanitizeEvent(content) {
+    if (content == null) {
+      return null;
+    }
+
     if (content is String || content is List<int>) {
       return content;
     }
