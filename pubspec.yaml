@@ -10,7 +10,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   # path: ^1.8.0
-  shelf: ^1.4.2
+  shelf: ^1.4.1
   shelf_static: ^1.1.2
   shelf_web_socket: ^2.0.0
   dart_jsonwebtoken: ^2.14.0

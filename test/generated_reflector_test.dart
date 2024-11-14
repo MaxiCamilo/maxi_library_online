@@ -14,8 +14,8 @@ void main() {
       // Additional setup goes here.
     });
 
-    test('Generate file reflect', () {
-      ReflectorGenerator(directories: ['test'], fileCreationPlace: '${DirectoryUtilities.prefixRouteLocal}/test', albumName: 'Test').build();
+    test('Generate file reflect', ()async {
+     await  ReflectorGenerator(directories: ['test'], fileCreationPlace: '${DirectoryUtilities.prefixRouteLocal}/test', albumName: 'Test').build();
     });
   });
 }
