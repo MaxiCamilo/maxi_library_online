@@ -8,7 +8,7 @@ import 'package:maxi_library_online/src/http_server/server/interfaces/iweb_socke
 import 'package:shelf/shelf.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
-class WebSocketShelf with IWebSocket {
+class WebSocketShelf with IPipe,IWebSocket {
   static Future<Response> makeWebSocket({
     required Request request,
     required Function(IWebSocket) onConnect,

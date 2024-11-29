@@ -1,7 +1,6 @@
-import 'dart:async';
 
-mixin IWebSocket implements StreamSink {
-  Stream get stream;
+import 'package:maxi_library/maxi_library.dart';
 
-  bool get isActive;
+mixin IWebSocket on IPipe {
+  
 }

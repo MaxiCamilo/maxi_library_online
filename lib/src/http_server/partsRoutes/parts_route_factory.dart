@@ -60,6 +60,10 @@ class PartsRouteFactory {
       case 'date':
       case 'time':
         return NamedPartRoute(name: name, type: PrimitiesType.isDateTime);
+      case 'string':
+      case '':
+      case 'text':
+        return NamedPartRoute(name: name, type: PrimitiesType.isString);
 
       default:
         throw NegativeResult(

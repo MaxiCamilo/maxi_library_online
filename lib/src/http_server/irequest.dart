@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
 
-enum HttpMethodType { postMethod, getMethod, deleteMethod, putMethod, anyMethod, webSocket }
+
 
 mixin IRequest {
   HttpMethodType get methodType;
