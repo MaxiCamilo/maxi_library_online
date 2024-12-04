@@ -208,6 +208,13 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
             await (pipe as StartableFunctionality).initialize();
           }
 
+          if (pipe is BroadcastPipe) {
+            pipe.connectPipe(ws);
+          } else {
+            pipe.joinCrossPipe(pipe: ws);
+          }
+
+/*
           pipe.stream.listen((x) {
             ws.add(x);
           }, onError: ws.addError);
@@ -218,6 +225,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
 
           ws.done.whenComplete(() => pipe.close());
           pipe.done.whenComplete(() => ws.close());
+          */
         } catch (ex) {
           final rn = NegativeResult.searchNegativity(item: ex, actionDescription: tr('Creating a pipe connection'));
           ws.add(rn.serializeToJson());
@@ -245,7 +253,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       },
     );
   }
-  
+
   @override
   Future createWebSocketForStream({required IRequest request, required Stream stream, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
     return createWebSocket(
