@@ -4,8 +4,6 @@ import 'dart:typed_data';
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
 
-
-
 mixin IRequest {
   HttpMethodType get methodType;
 
@@ -44,6 +42,19 @@ mixin IRequest {
     }
 
     return ConverterUtilities.toInt(propertyName: tr(name), value: rawValue);
+  }
+
+  int? getOptionalNumberParameter({required String name}) {
+    final rawValue = valuesInRoute[name];
+    if (rawValue == null) {
+      return null;
+    }
+
+    return ConverterUtilities.toInt(propertyName: tr(name), value: rawValue);
+  }
+
+  bool parameterExists({required String name}) {
+    return valuesInRoute.containsKey(name);
   }
 
 /*

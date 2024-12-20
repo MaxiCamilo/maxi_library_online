@@ -20,6 +20,8 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
   final Object address;
   final int port;
   final SecurityContext? securityContext;
+  final bool addAccessControlAllowOrigin;
+  final String accessControlAllowOrigin;
 
   late HttpServer _server;
 
@@ -31,6 +33,8 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     required this.address,
     required this.port,
     required this.securityContext,
+    this.addAccessControlAllowOrigin = true,
+    this.accessControlAllowOrigin = '*',
   });
 
   factory HttpServerShelf.fromReflection({
@@ -169,6 +173,12 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     Map<String, String> extraHeader = const {},
   }) {
     final cabezal = {'content-type': contentType, 'x-app-version': appVersion.toString(), 'x-app-name': appName};
+
+    if (addAccessControlAllowOrigin && !cabezal.containsKey('Access-Control-Allow-Origin')) {
+      cabezal['Access-Control-Allow-Origin'] = accessControlAllowOrigin;
+      cabezal['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+      cabezal['Access-Control-Allow-Headers'] = 'Origin, Content-Type';
+    }
 
     for (final parte in extraHeader.entries) {
       cabezal[parte.key] = parte.value;
