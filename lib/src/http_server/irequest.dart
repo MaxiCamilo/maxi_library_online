@@ -57,6 +57,15 @@ mixin IRequest {
     return valuesInRoute.containsKey(name);
   }
 
+  String getStringParameter({required String name, required String defaultValue}) {
+    final rawValue = valuesInRoute[name];
+    if (rawValue == null) {
+      return defaultValue;
+    }
+
+    return rawValue;
+  }
+
 /*
   Future<dynamic> createWebSocket({
     required Function(IBidirectionalStream) onConnection,
