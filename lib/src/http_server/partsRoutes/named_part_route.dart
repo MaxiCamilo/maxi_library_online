@@ -25,7 +25,7 @@ class NamedPartRoute with IPartRoute {
         namedValues[name] = GeneralConverter(part).toDouble(propertyName: AlreadyTranslatedText(message: name));
         break;
       case PrimitiesType.isString:
-        namedValues[name] = GeneralConverter(part);
+        namedValues[name] = part.toString();
         break;
       case PrimitiesType.isBoolean:
         namedValues[name] = GeneralConverter(part).toBoolean(propertyName: AlreadyTranslatedText(message: name));
