@@ -30,7 +30,7 @@ mixin IRequest {
     if (!isWebSocket) {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidFunctionality,
-        message: tr('This function only supports execution via WebSocket'),
+        message: Oration(message: 'This function only supports execution via WebSocket'),
       );
     }
   }
@@ -41,7 +41,7 @@ mixin IRequest {
       return defaultValue;
     }
 
-    return ConverterUtilities.toInt(propertyName: tr(name), value: rawValue);
+    return ConverterUtilities.toInt(propertyName: Oration(message: name), value: rawValue);
   }
 
   int? getOptionalNumberParameter({required String name}) {
@@ -50,7 +50,7 @@ mixin IRequest {
       return null;
     }
 
-    return ConverterUtilities.toInt(propertyName: tr(name), value: rawValue);
+    return ConverterUtilities.toInt(propertyName: Oration(message: name), value: rawValue);
   }
 
   bool parameterExists({required String name}) {

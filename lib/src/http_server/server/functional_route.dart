@@ -18,7 +18,7 @@ class FunctionalRoute {
     if (route == null) {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidValue,
-        message: tr('Method %1 of class %2 does not have a "HttpRequestMethod" decorator', [method.name, parent.name]),
+        message: Oration(message: 'Method %1 of class %2 does not have a "HttpRequestMethod" decorator', textParts:[method.name, parent.name]),
       );
     }
 
@@ -31,8 +31,6 @@ class FunctionalRoute {
     bufferRoute.write(route.route.first == '/' ? route.route.extractFrom(since: 1) : route.route);
 
     final parts = PartsRouteFactory.build(route: bufferRoute.toString()).parts;
-
-    
 
     return FunctionalRoute(
       type: route.type,
@@ -64,7 +62,6 @@ class FunctionalRoute {
     return true;
   }
 
-  
   /*
   Map<String, dynamic> addValues({required IRequest request}) {
     if (request.url.path == '') {

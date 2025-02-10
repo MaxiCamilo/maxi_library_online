@@ -32,7 +32,7 @@ class RequestShelf with IRequest {
         'delete' => HttpMethodType.deleteMethod,
         _ => throw NegativeResult(
             identifier: NegativeResultCodes.invalidFunctionality,
-            message: tr('Method %1 has no use on the server', [request.method]),
+            message: Oration(message: 'Method %1 has no use on the server', textParts: [request.method]),
           )
       };
     }
@@ -59,7 +59,7 @@ class RequestShelf with IRequest {
       if (request.contentLength != null && maxSize < request.contentLength!) {
         throw NegativeResult(
           identifier: NegativeResultCodes.invalidValue,
-          message: tr('The content of the request is too large (Accepts up to %1 bytes, but %2 bytes were trying to be sent)', [maxSize, request.contentLength]),
+          message: Oration(message: 'The content of the request is too large (Accepts up to %1 bytes, but %2 bytes were trying to be sent)', textParts: [maxSize, request.contentLength]),
         );
       }
     }
@@ -82,7 +82,7 @@ class RequestShelf with IRequest {
       if (maxSize < request.contentLength!) {
         throw NegativeResult(
           identifier: NegativeResultCodes.invalidValue,
-          message: tr('The content of the request is too large (Accepts up to %1 bytes, but %2 bytes were trying to be sent)', [maxSize, request.contentLength]),
+          message: Oration(message: 'The content of the request is too large (Accepts up to %1 bytes, but %2 bytes were trying to be sent)', textParts: [maxSize, request.contentLength]),
         );
       }
     }

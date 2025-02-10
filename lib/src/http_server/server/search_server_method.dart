@@ -78,12 +78,12 @@ class SearchServerMethod {
     if (namedCandidates.isEmpty) {
       throw NegativeResult(
         identifier: NegativeResultCodes.implementationFailure,
-        message: tr('Path %1 is not valid route', [request.url.path]),
+        message: Oration(message: 'Path %1 is not valid route', textParts:[request.url.path]),
       );
     } else if (namedCandidates.length > 1) {
       throw NegativeResult(
         identifier: NegativeResultCodes.implementationFailure,
-        message: tr('Path %1 has multiple routes (%2 routes)', [request.url.path, namedCandidates.length]),
+        message: Oration(message: 'Path %1 has multiple routes (%2 routes)', textParts:[request.url.path, namedCandidates.length]),
       );
     } else {
       return namedCandidates.first;

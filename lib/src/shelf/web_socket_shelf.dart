@@ -8,7 +8,7 @@ import 'package:maxi_library_online/src/http_server/server/interfaces/iweb_socke
 import 'package:shelf/shelf.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
-class WebSocketShelf with IPipe,IWebSocket {
+class WebSocketShelf with IPipe, IWebSocket {
   static Future<Response> makeWebSocket({
     required Request request,
     required Function(IWebSocket) onConnect,
@@ -19,14 +19,14 @@ class WebSocketShelf with IPipe,IWebSocket {
     if (request.method != "GET") {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidFunctionality,
-        message: tr('Creating a websocket channel failed: Websockets require the method to be "get"'),
+        message: Oration(message: 'Creating a websocket channel failed: Websockets require the method to be "get"'),
       );
     }
     var connectionHeader = request.headers[HttpHeaders.connectionHeader];
     if (connectionHeader == null) {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidFunctionality,
-        message: tr('Creating a websocket channel failed: "connection" head is required'),
+        message: Oration(message: 'Creating a websocket channel failed: "connection" head is required'),
       );
     }
 
@@ -40,28 +40,28 @@ class WebSocketShelf with IPipe,IWebSocket {
     if (!isUpgrade) {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidFunctionality,
-        message: tr('Creating a websocket channel failed: The "connection" header must be "upgrade", to create a web socket'),
+        message: Oration(message: 'Creating a websocket channel failed: The "connection" header must be "upgrade", to create a web socket'),
       );
     }
     final upgrade = request.headers[HttpHeaders.upgradeHeader];
     if (upgrade == null || upgrade.toLowerCase() != "websocket") {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidFunctionality,
-        message: tr('Creating a websocket channel failed: The "upgrade" head is required and must be defined as "websocket"'),
+        message: Oration(message: 'Creating a websocket channel failed: The "upgrade" head is required and must be defined as "websocket"'),
       );
     }
     final version = request.headers["Sec-WebSocket-Version"];
     if (version == null || version != "13") {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidFunctionality,
-        message: tr('Creating a websocket channel failed: The "Sec-WebSocket-Version" head is required and must be defined as "13"'),
+        message: Oration(message: 'Creating a websocket channel failed: The "Sec-WebSocket-Version" head is required and must be defined as "13"'),
       );
     }
     final key = request.headers["Sec-WebSocket-Key"];
     if (key == null) {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidFunctionality,
-        message: tr('Creating a websocket channel failed: The "Sec-WebSocket-Key" head is required'),
+        message: Oration(message: 'Creating a websocket channel failed: The "Sec-WebSocket-Key" head is required'),
       );
     }
 
@@ -98,14 +98,14 @@ class WebSocketShelf with IPipe,IWebSocket {
     } catch (ex) {
       addError(NegativeResult(
         identifier: NegativeResultCodes.wrongType,
-        message: tr('An error occurred while serializing a message for client transmission. The object of type %1 cannot be serialized', [event.runtimeType]),
+        message: Oration(message: 'An error occurred while serializing a message for client transmission. The object of type %1 cannot be serialized', textParts: [event.runtimeType]),
       ));
     }
   }
 
   @override
   void addError(Object error, [StackTrace? stackTrace]) {
-    final nr = NegativeResult.searchNegativity(item: error, actionDescription: tr('Request web'));
+    final nr = NegativeResult.searchNegativity(item: error, actionDescription: Oration(message: 'Request web'));
     add(json.encode(nr.serialize()));
   }
 

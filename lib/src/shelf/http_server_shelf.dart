@@ -64,7 +64,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     if (routes.isEmpty) {
       throw NegativeResult(
         identifier: NegativeResultCodes.contextInvalidFunctionality,
-        message: tr('There are no reflected methods for the http server'),
+        message: Oration(message: 'There are no reflected methods for the http server'),
       );
     }
 
@@ -102,7 +102,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
           idState: 500,
           content: NegativeResult(
             identifier: NegativeResultCodes.implementationFailure,
-            message: tr('The serialization of the output from the called function failed with the following error: %1', [ex.toString()]),
+            message: Oration(message: 'The serialization of the output from the called function failed with the following error: %1',textParts: [ex.toString()]),
           ));
     }
   }
@@ -115,7 +115,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       return _generateSanitizedResponse(
           idState: idState,
           content: json.encode({
-            'message': tr('The requested function has completed successfully').serialize(),
+            'message': Oration(message: 'The requested function has completed successfully').serialize(),
             'whenWasIt': DateTime.now().millisecondsSinceEpoch,
           }));
     }
@@ -236,7 +236,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
           pipe.done.whenComplete(() => ws.close());
           */
         } catch (ex) {
-          final rn = NegativeResult.searchNegativity(item: ex, actionDescription: tr('Creating a pipe connection'));
+          final rn = NegativeResult.searchNegativity(item: ex, actionDescription: Oration(message: 'Creating a pipe connection'));
           ws.add(rn.serializeToJson());
           ws.close();
         }

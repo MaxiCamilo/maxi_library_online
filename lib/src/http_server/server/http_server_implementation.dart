@@ -54,7 +54,7 @@ abstract class HttpServerImplementation<T> {
   static dynamic _routeNotFoundStandar(IRequest request) {
     return NegativeResultHttp(
       identifier: NegativeResultCodes.nonExistent,
-      message: tr('The defined route does not lead anywhere'),
+      message: Oration(message: 'The defined route does not lead anywhere'),
       httpErrorCode: 404,
     );
   }
@@ -79,7 +79,7 @@ abstract class HttpServerImplementation<T> {
       if (shouldRetriggerException(ex)) {
         rethrow;
       }
-      returnValue = NegativeResult.searchNegativity(item: ex, actionDescription: tr('Execute function'));
+      returnValue = NegativeResult.searchNegativity(item: ex, actionDescription: Oration(message: 'Execute function'));
     }
 
     if (returnValue is IPipe) {

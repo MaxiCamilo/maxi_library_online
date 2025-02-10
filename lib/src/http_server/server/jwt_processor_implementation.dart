@@ -21,19 +21,19 @@ abstract class JwtProcessorImplementation<T> with IJwtAlgorithm<T> {
     if (authHeader == null) {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidValue,
-        message: tr('An authentication token is required'),
+        message: Oration(message: 'An authentication token is required'),
       );
     }
 
     if (!authHeader.startsWith('Bearer ')) {
       throw NegativeResult(
         identifier: NegativeResultCodes.invalidValue,
-        message: tr('The authentication token is invalid, it must start with "Bearer "'),
+        message: Oration(message: 'The authentication token is invalid, it must start with "Bearer "'),
       );
     }
 
     final tokenText = authHeader.substring(7);
-    final token = volatile(detail:  tr('The authentication token is invalid, is not a valid JWT format'), function: () => JWT.verify(tokenText, SecretKey(secretKey)));
+    final token = volatile(detail: Oration(message: 'The authentication token is invalid, is not a valid JWT format'), function: () => JWT.verify(tokenText, SecretKey(secretKey)));
 
     return checkRequestTokerImplementation(request: request, token: token);
   }

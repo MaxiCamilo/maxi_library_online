@@ -68,7 +68,7 @@ class PartsRouteFactory {
       default:
         throw NegativeResult(
           identifier: NegativeResultCodes.invalidValue,
-          message: tr('Type value %1 of %2 does not match any option (int,double,datetime,bool)', [type, name]),
+          message: Oration(message: 'Type value %1 of %2 does not match any option (int,double,datetime,bool)', textParts:[type, name]),
         );
     }
   }

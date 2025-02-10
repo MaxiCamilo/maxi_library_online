@@ -16,25 +16,25 @@ class NamedPartRoute with IPartRoute {
   void addValue({required String part, required Map<String, dynamic> namedValues}) {
     switch (type) {
       case PrimitiesType.isInt:
-        namedValues[name] = GeneralConverter(part).toInt(propertyName: AlreadyTranslatedText(message: name));
+        namedValues[name] = GeneralConverter(part).toInt(propertyName: TranslatedOration(message: name));
         break;
       case PrimitiesType.isDouble:
-        namedValues[name] = GeneralConverter(part).toDouble(propertyName: AlreadyTranslatedText(message: name));
+        namedValues[name] = GeneralConverter(part).toDouble(propertyName: TranslatedOration(message: name));
         break;
       case PrimitiesType.isNum:
-        namedValues[name] = GeneralConverter(part).toDouble(propertyName: AlreadyTranslatedText(message: name));
+        namedValues[name] = GeneralConverter(part).toDouble(propertyName: TranslatedOration(message: name));
         break;
       case PrimitiesType.isString:
         namedValues[name] = part.toString();
         break;
       case PrimitiesType.isBoolean:
-        namedValues[name] = GeneralConverter(part).toBoolean(propertyName: AlreadyTranslatedText(message: name));
+        namedValues[name] = GeneralConverter(part).toBoolean(propertyName: TranslatedOration(message: name));
         break;
       case PrimitiesType.isDateTime:
-        namedValues[name] = GeneralConverter(part).toDateTime(propertyName: AlreadyTranslatedText(message: name));
+        namedValues[name] = GeneralConverter(part).toDateTime(propertyName: TranslatedOration(message: name));
         break;
       case PrimitiesType.isBinary:
-        throw NegativeResult(identifier: NegativeResultCodes.implementationFailure, message: tr('¡Binary interpretation was not created!'));
+        throw NegativeResult(identifier: NegativeResultCodes.implementationFailure, message: Oration(message: '¡Binary interpretation was not created!'));
     }
   }
 }
