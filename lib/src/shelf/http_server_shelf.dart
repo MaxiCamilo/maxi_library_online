@@ -102,7 +102,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
           idState: 500,
           content: NegativeResult(
             identifier: NegativeResultCodes.implementationFailure,
-            message: Oration(message: 'The serialization of the output from the called function failed with the following error: %1',textParts: [ex.toString()]),
+            message: Oration(message: 'The serialization of the output from the called function failed with the following error: %1', textParts: [ex.toString()]),
           ));
     }
   }
@@ -205,7 +205,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
   }
 
   @override
-  Future createWebSocketForPipe({required IRequest request, required IPipe pipe, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
+  Future createWebSocketForPipe({required IRequest request, required IMasterChannel master, Iterable<String>? protocols, Iterable<String>? allowedOrigins, Duration? pingInterval}) {
     return createWebSocket(
       request: request,
       allowedOrigins: allowedOrigins,
@@ -213,15 +213,30 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       protocols: protocols,
       onConnection: (ws) async {
         try {
-          if (pipe is StartableFunctionality) {
-            await (pipe as StartableFunctionality).initialize();
+          if (master is StartableFunctionality) {
+            await (master as StartableFunctionality).initialize();
           }
 
+          final slave = master.createSlave();
+
+          slave.receiver.listen(
+            (x) => ws.addIfActive(x),
+            onError: (x, y) => ws.addErrorIfActive(x, y),
+            onDone: () => ws.close(),
+          );
+          ws.receiver.listen(
+            (x) => slave.addIfActive(x),
+            onError: (x, y) => slave.addErrorIfActive(x, y),
+            onDone: () => slave.close(),
+          );
+
+/*
           if (pipe is BroadcastPipe) {
             pipe.connectPipe(ws);
           } else {
             pipe.joinCrossPipe(pipe: ws);
           }
+          */
 
 /*
           pipe.stream.listen((x) {
@@ -252,7 +267,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
       pingInterval: pingInterval,
       protocols: protocols,
       onConnection: (ws) async {
-        ws.stream.listen(sink.add, onError: sink.addError, onDone: () {
+        ws.receiver.listen(sink.add, onError: sink.addError, onDone: () {
           sink.close();
         });
 

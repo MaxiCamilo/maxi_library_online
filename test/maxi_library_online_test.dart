@@ -30,6 +30,7 @@ void main() {
       );
 
       await server.startServer();
+      print('I am ready');
 
       /*
       Future.delayed(Duration(seconds: 15)).whenComplete(() async {

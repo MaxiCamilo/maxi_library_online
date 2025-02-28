@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
@@ -8,7 +9,6 @@ import '../models/person.dart';
 @reflect
 @HttpRequestClass(route: 'v1/person')
 class PersonApi {
-
   @HttpRequestMethod(type: HttpMethodType.getMethod, route: '')
   List<Person> getAllPerson() {
     return [
@@ -54,21 +54,36 @@ class PersonApi {
     print('Finish');
   }
 
-  @HttpRequestMethod(type: HttpMethodType.getMethod, route: 'interact')
-  StreamController<String> interact() {
-    final controller = StreamController<String>.broadcast();
+  @HttpRequestMethod(type: HttpMethodType.webSocket, route: 'interact')
+  IChannel<String, String> interact() {
+    final controller = MasterChannel<String, String>(closeIfEveryoneClosed: true);
 
-    controller.stream.listen((x) => print('Sender: $x'));
+    controller.receiver.listen((x) {
+      log('Received: $x');
+    });
 
-    Future.delayed(Duration(seconds: 10)).whenComplete(() => controller.close());
+    controller.done.whenComplete(() => log('Good bye!'));
+
+    scheduleMicrotask(() async {
+      await controller.waitForNewConnection(omitIfAlreadyConnection: true);
+      for (int i = 1; i < 60; i++) {
+        if (controller.isActive) {
+          controller.add('Sent $i');
+        } else {
+          break;
+        }
+
+        await Future.delayed(const Duration(seconds: 3));
+      }
+    });
+
+    Future.delayed(Duration(seconds: 60)).whenComplete(() {
+      controller.add('Timeout!');
+      controller.close();
+    });
 
     return controller;
   }
-
-  
-
-
-
 
   /*
   @HttpRequestMethod(type: HttpMethodType.getMethod, route: 'socket')

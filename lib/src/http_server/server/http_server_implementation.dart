@@ -82,8 +82,27 @@ abstract class HttpServerImplementation<T> {
       returnValue = NegativeResult.searchNegativity(item: ex, actionDescription: Oration(message: 'Execute function'));
     }
 
-    if (returnValue is IPipe) {
-      returnValue = await createWebSocketForPipe(pipe: returnValue, request: request);
+    if (returnValue is IMasterChannel) {
+      returnValue = await createWebSocketForPipe(master: returnValue, request: request);
+    } else if (returnValue is IChannel) {
+      final master = MasterChannel(closeIfEveryoneClosed: true);
+
+      if (returnValue is StartableFunctionality) {
+        await (returnValue as StartableFunctionality).initialize();
+      }
+
+      master.receiver.listen(
+        (x) => returnValue.addIfActive(x),
+        onError: (x, y) => returnValue.addErrorIfActive(x, y),
+        onDone: () => returnValue.close(),
+      );
+      returnValue.receiver.listen(
+        (x) => master.addIfActive(x),
+        onError: (x, y) => master.addErrorIfActive(x, y),
+        onDone: () => master.close(),
+      );
+
+      returnValue = await createWebSocketForPipe(master: master, request: request);
     } else if (returnValue is Stream) {
       returnValue = await createWebSocketForStream(stream: returnValue, request: request);
     } else if (returnValue is StreamSink) {
@@ -127,7 +146,7 @@ abstract class HttpServerImplementation<T> {
 
   Future<dynamic> createWebSocketForPipe({
     required IRequest request,
-    required IPipe pipe,
+    required IMasterChannel master,
     Iterable<String>? protocols,
     Iterable<String>? allowedOrigins,
     Duration? pingInterval,

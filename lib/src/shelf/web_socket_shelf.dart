@@ -8,7 +8,7 @@ import 'package:maxi_library_online/src/http_server/server/interfaces/iweb_socke
 import 'package:shelf/shelf.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
-class WebSocketShelf with IPipe, IWebSocket {
+class WebSocketShelf with IChannel, IWebSocket {
   static Future<Response> makeWebSocket({
     required Request request,
     required Function(IWebSocket) onConnect,
@@ -136,7 +136,7 @@ class WebSocketShelf with IPipe, IWebSocket {
   bool get isActive => !_controllerReceiver.isClosed;
 
   @override
-  Stream get stream => _controllerReceiver.stream;
+  Stream get receiver => _controllerReceiver.stream;
 
   _sanitizeEvent(content) {
     if (content == null) {
