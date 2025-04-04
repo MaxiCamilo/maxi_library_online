@@ -59,6 +59,31 @@ abstract class HttpServerImplementation<T> {
     );
   }
 
+  static List<FunctionalRoute> getAllRouteByReflection({required List<IHttpMiddleware> serverMiddleware, List<ITypeEntityReflection>? entityList}) {
+    final routes = <FunctionalRoute>[];
+
+    for (final reflectedClass in entityList ?? ReflectionManager.getEntities()) {
+      for (final method in reflectedClass.methods) {
+        final route = method.annotations.selectByType<HttpRequestMethod>();
+        if (route == null) {
+          continue;
+        }
+
+        final newMethod = FunctionalRoute.fromReflection(serverMiddleware: serverMiddleware, method: method, parent: reflectedClass);
+        routes.add(newMethod);
+      }
+    }
+
+    if (routes.isEmpty) {
+      throw NegativeResult(
+        identifier: NegativeResultCodes.contextInvalidFunctionality,
+        message: Oration(message: 'There are no reflected methods for the http server'),
+      );
+    }
+
+    return routes;
+  }
+
   HttpServerImplementation({
     required this.routes,
     dynamic Function(IRequest)? routeNotFound,

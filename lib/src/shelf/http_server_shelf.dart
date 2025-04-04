@@ -7,7 +7,6 @@ import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
 import 'package:maxi_library_online/src/http_server/response_http.dart';
 import 'package:maxi_library_online/src/http_server/server/functional_route.dart';
-import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
 import 'package:maxi_library_online/src/http_server/server/interfaces/iweb_socket.dart';
 import 'package:maxi_library_online/src/shelf/web_socket_shelf.dart';
 import 'package:shelf/shelf.dart';
@@ -47,27 +46,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     dynamic Function(IRequest)? routeNotFound,
     List<ITypeEntityReflection>? entityList,
   }) {
-    final routes = <FunctionalRoute>[];
-
-    for (final reflectedClass in entityList ?? ReflectionManager.getEntities()) {
-      for (final method in reflectedClass.methods) {
-        final route = method.annotations.selectByType<HttpRequestMethod>();
-        if (route == null) {
-          continue;
-        }
-
-        final newMethod = FunctionalRoute.fromReflection(serverMiddleware: serverMiddleware, method: method, parent: reflectedClass);
-        routes.add(newMethod);
-      }
-    }
-
-    if (routes.isEmpty) {
-      throw NegativeResult(
-        identifier: NegativeResultCodes.contextInvalidFunctionality,
-        message: Oration(message: 'There are no reflected methods for the http server'),
-      );
-    }
-
+    final routes = HttpServerImplementation.getAllRouteByReflection(serverMiddleware: serverMiddleware, entityList: entityList);
     return HttpServerShelf(
       routes: routes,
       appName: appName,
