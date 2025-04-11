@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/error_handling/negative_result_http.dart';
-import 'package:maxi_library_online/src/http_server/server/interfaces/iweb_socket.dart';
+import 'package:maxi_library_online/src/http_server/interfaces/iweb_socket.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 

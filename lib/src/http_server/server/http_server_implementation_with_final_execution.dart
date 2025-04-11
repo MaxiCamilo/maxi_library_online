@@ -6,7 +6,7 @@ import 'package:maxi_library_online/src/http_server/server/functional_route.dart
 import 'package:maxi_library_online/src/http_server/server/search_server_method.dart';
 import 'package:meta/meta.dart';
 
-abstract class HttpServerImplementation<T> {
+abstract class HttpServerImplementationWithFinalExecution<T> with IHttpServer{
   final List<FunctionalRoute> routes;
   final dynamic Function(IRequest) routeNotFound;
 
@@ -16,8 +16,10 @@ abstract class HttpServerImplementation<T> {
 
   T generateReturnPackage(dynamic value);
 
+  @override
   bool get isActive => _isActive;
 
+  @override
   Future<void> waitFinish() {
     _waitFinish ??= Completer();
     return _waitFinish!.future;
@@ -29,6 +31,7 @@ abstract class HttpServerImplementation<T> {
   @protected
   Future<void> closeServerImplementation({bool forced = false});
 
+  @override
   Future<void> startServer() async {
     if (_isActive) {
       return;
@@ -39,6 +42,7 @@ abstract class HttpServerImplementation<T> {
     _isActive = true;
   }
 
+  @override
   Future<void> closeServer({bool forced = false}) async {
     if (!_isActive) {
       return;
@@ -59,32 +63,9 @@ abstract class HttpServerImplementation<T> {
     );
   }
 
-  static List<FunctionalRoute> getAllRouteByReflection({required List<IHttpMiddleware> serverMiddleware, List<ITypeEntityReflection>? entityList}) {
-    final routes = <FunctionalRoute>[];
+  
 
-    for (final reflectedClass in entityList ?? ReflectionManager.getEntities()) {
-      for (final method in reflectedClass.methods) {
-        final route = method.annotations.selectByType<HttpRequestMethod>();
-        if (route == null) {
-          continue;
-        }
-
-        final newMethod = FunctionalRoute.fromReflection(serverMiddleware: serverMiddleware, method: method, parent: reflectedClass);
-        routes.add(newMethod);
-      }
-    }
-
-    if (routes.isEmpty) {
-      throw NegativeResult(
-        identifier: NegativeResultCodes.contextInvalidFunctionality,
-        message: Oration(message: 'There are no reflected methods for the http server'),
-      );
-    }
-
-    return routes;
-  }
-
-  HttpServerImplementation({
+  HttpServerImplementationWithFinalExecution({
     required this.routes,
     dynamic Function(IRequest)? routeNotFound,
     bool startActive = false,

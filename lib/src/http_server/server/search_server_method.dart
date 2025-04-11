@@ -76,14 +76,16 @@ class SearchServerMethod {
 
     final namedCandidates = candidates.where((x) => x.routeGuide.last is NamedParameter).toList();
     if (namedCandidates.isEmpty) {
-      throw NegativeResult(
+      throw NegativeResultHttp(
         identifier: NegativeResultCodes.implementationFailure,
-        message: Oration(message: 'Path %1 is not valid route', textParts:[request.url.path]),
+        message: Oration(message: 'Path %1 is not valid route', textParts: [request.url.path]),
+        httpErrorCode: 400,
       );
     } else if (namedCandidates.length > 1) {
-      throw NegativeResult(
+      throw NegativeResultHttp(
         identifier: NegativeResultCodes.implementationFailure,
-        message: Oration(message: 'Path %1 has multiple routes (%2 routes)', textParts:[request.url.path, namedCandidates.length]),
+        message: Oration(message: 'Path %1 has multiple routes (%2 routes)', textParts: [request.url.path, namedCandidates.length]),
+        httpErrorCode: 400,
       );
     } else {
       return namedCandidates.first;

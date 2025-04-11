@@ -4,12 +4,12 @@ import 'dart:typed_data';
 
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/http_server/irequest.dart';
-import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
+import 'package:maxi_library_online/src/http_server/server/http_server_implementation_with_final_execution.dart';
 import 'package:shelf/shelf.dart';
 
 class RequestShelf with IRequest {
   @override
-  final HttpServerImplementation server;
+  final HttpServerImplementationWithFinalExecution server;
 
   late final Request request;
 
@@ -38,8 +38,8 @@ class RequestShelf with IRequest {
     }
   }
 
-  @override
-  final Map<String, dynamic> businessFragments = <String, dynamic>{};
+  //@override
+  //final Map<String, dynamic> businessFragments = <String, dynamic>{};
 
   @override
   int get contentLength => request.contentLength ?? 0;

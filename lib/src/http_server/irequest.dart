@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:maxi_library/maxi_library.dart';
-import 'package:maxi_library_online/src/http_server/server/http_server_implementation.dart';
+import 'package:maxi_library_online/maxi_library_online.dart';
 
 mixin IRequest {
   HttpMethodType get methodType;
@@ -18,11 +18,11 @@ mixin IRequest {
   Future<String> readContentAsString({int? maxSize, Encoding? encoding});
   Future<Uint8List> readContentAsBinary({int? maxSize});
 
-  Map<String, dynamic> get businessFragments;
+  //Map<String, dynamic> get businessFragments;
 
   Map<String, dynamic> get valuesInRoute;
 
-  HttpServerImplementation get server;
+  IHttpServer get server;
 
   bool get isWebSocket;
 

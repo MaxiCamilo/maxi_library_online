@@ -6,13 +6,12 @@ import 'dart:typed_data';
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
 import 'package:maxi_library_online/src/http_server/response_http.dart';
-import 'package:maxi_library_online/src/http_server/server/functional_route.dart';
-import 'package:maxi_library_online/src/http_server/server/interfaces/iweb_socket.dart';
+import 'package:maxi_library_online/src/http_server/interfaces/iweb_socket.dart';
 import 'package:maxi_library_online/src/shelf/web_socket_shelf.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 
-class HttpServerShelf extends HttpServerImplementation<Response> {
+class HttpServerShelf extends HttpServerImplementationWithFinalExecution<Response> {
   final String appName;
   final double appVersion;
 
@@ -46,7 +45,7 @@ class HttpServerShelf extends HttpServerImplementation<Response> {
     dynamic Function(IRequest)? routeNotFound,
     List<ITypeEntityReflection>? entityList,
   }) {
-    final routes = HttpServerImplementation.getAllRouteByReflection(serverMiddleware: serverMiddleware, entityList: entityList);
+    final routes = IHttpServer.getAllRouteByReflection(serverMiddleware: serverMiddleware, entityList: entityList);
     return HttpServerShelf(
       routes: routes,
       appName: appName,

@@ -6,3 +6,4 @@ export 'package:maxi_library_online/src/error_handling.dart';
 export 'package:maxi_library_online/src/shelf.dart';
 export 'package:maxi_library_online/src/tools.dart';
 export 'package:maxi_library_online/src/server.dart';
+export 'package:maxi_library_online/src/map_server.dart';

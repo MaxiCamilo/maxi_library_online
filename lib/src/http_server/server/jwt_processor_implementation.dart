@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/src/http_server/irequest.dart';
-import 'package:maxi_library_online/src/http_server/server/interfaces/ijwt_algorithm.dart';
+import 'package:maxi_library_online/src/http_server/interfaces/ijwt_algorithm.dart';
 
 abstract class JwtProcessorImplementation<T> with IJwtAlgorithm<T> {
   final String secretKey;
