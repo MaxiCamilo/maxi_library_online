@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
-import 'package:maxi_library_online/src/http_server/server/functional_route.dart';
 
 mixin IHttpServer {
   bool get isActive;
   Future<void> waitFinish();
   Future<void> startServer();
   Future<void> closeServer({bool forced = false});
+  Future<void> closeAllWebSockets();
 
   static List<FunctionalRoute> getAllRouteByReflection({required List<IHttpMiddleware> serverMiddleware, List<ITypeEntityReflection>? entityList}) {
     final routes = <FunctionalRoute>[];
@@ -78,6 +78,4 @@ mixin IHttpServer {
     final reflDio = ReflectionManager.getReflectionEntity(content.runtimeType);
     return reflDio.serializeToJson(value: content, setTypeValue: true);
   }
-
- 
 }

@@ -11,15 +11,11 @@ class MapServerConnector with IHttpRequester, StartableFunctionality, Functional
   final Stream<Map<String, dynamic>> receiver;
   final StreamSink<Map<String, dynamic>> sender;
 
-  late final StreamController<Oration> _receiverServerStatus;
-
   bool _wasInitialize = false;
   Completer<int>? _newTaskWaiter;
 
   final Map<int, Completer<ResponseHttpRequest<String>>> _activeTask = {};
   final Map<int, IMasterChannel> _activeChannels = {};
-
-  Stream<Oration> get notifyServerStatus => _receiverServerStatus.stream;
 
   @override
   bool get isActive => isInitialized;
@@ -29,16 +25,9 @@ class MapServerConnector with IHttpRequester, StartableFunctionality, Functional
   MapServerConnector({
     required this.receiver,
     required this.sender,
-    required Stream<Oration> receiverServerStatus,
-  }) {
-    _receiverServerStatus = createEventController<Oration>(isBroadcast: true);
+  });
 
-    joinEvent(event: receiverServerStatus, onData: (x) => _receiverServerStatus.addIfActive(x));
-  }
-
-  StreamStateTextsVoid initializeAsTextsSteam() async* {
-    yield* connectItemStream(notifyServerStatus.parallelizingStreamWithFuture(function: initialize));
-  }
+  
 
   @override
   Future<void> afterInitializingFunctionality() async {

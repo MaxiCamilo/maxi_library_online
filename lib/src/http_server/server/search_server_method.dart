@@ -2,7 +2,6 @@ import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
 import 'package:maxi_library_online/src/http_server/partsRoutes/fixed_part_route.dart';
 import 'package:maxi_library_online/src/http_server/partsRoutes/named_part_route.dart';
-import 'package:maxi_library_online/src/http_server/server/functional_route.dart';
 
 class SearchServerMethod {
   final List<FunctionalRoute> routes;

@@ -23,6 +23,8 @@ class HttpServerShelf extends HttpServerImplementationWithFinalExecution<Respons
 
   late HttpServer _server;
 
+  final _webSocketList = <IChannel>[];
+
   HttpServerShelf({
     required super.routes,
     super.routeNotFound,
@@ -67,8 +69,9 @@ class HttpServerShelf extends HttpServerImplementationWithFinalExecution<Respons
   }
 
   @override
-  Future<void> closeServerImplementation({bool forced = false}) {
-    return _server.close(force: forced);
+  Future<void> closeServerImplementation({bool forced = false}) async {
+    await _server.close(force: forced);
+    await closeAllWebSockets();
   }
 
   @override
@@ -197,6 +200,8 @@ class HttpServerShelf extends HttpServerImplementationWithFinalExecution<Respons
 
           final slave = master.createSlave();
 
+          _webSocketList.add(ws);
+
           slave.receiver.listen(
             (x) => ws.addIfActive(x),
             onError: (x, y) => ws.addErrorIfActive(x, y),
@@ -205,7 +210,10 @@ class HttpServerShelf extends HttpServerImplementationWithFinalExecution<Respons
           ws.receiver.listen(
             (x) => slave.addIfActive(x),
             onError: (x, y) => slave.addErrorIfActive(x, y),
-            onDone: () => slave.close(),
+            onDone: () {
+              slave.close();
+              _webSocketList.remove(ws);
+            },
           );
 
 /*
@@ -275,5 +283,11 @@ class HttpServerShelf extends HttpServerImplementationWithFinalExecution<Respons
         ws.done.whenComplete(() => subcription.cancel());
       },
     );
+  }
+
+  @override
+  Future<void> closeAllWebSockets() async {
+    _webSocketList.iterar((x) => x.close());
+    _webSocketList.clear();
   }
 }

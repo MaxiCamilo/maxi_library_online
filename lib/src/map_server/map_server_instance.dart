@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:maxi_library_online/maxi_library_online.dart';
 import 'package:maxi_library/maxi_library.dart';
-import 'package:maxi_library_online/src/http_server/server/functional_route.dart';
 import 'package:maxi_library_online/src/http_server/server/search_server_method.dart';
 import 'package:maxi_library_online/src/map_server/map_server_prefix.dart';
 
@@ -44,8 +43,6 @@ class MapServerInstance with IHttpServer, StartableFunctionality {
       generalMiddleware: serverMiddleware,
     );
   }
-
-  
 
   @override
   Future<void> startServer() => initialize();
@@ -289,6 +286,14 @@ class MapServerInstance with IHttpServer, StartableFunctionality {
         '\$type': MapServerPrefix.serverCloseChannel,
         MapServerPrefix.taskID: id,
       });
+    }
+  }
+
+  @override
+  Future<void> closeAllWebSockets() async {
+    if (isInitialized) {
+      _slaveChannels.entries.iterar((x) => x.value.close());
+      _slaveChannels.clear();
     }
   }
 }
