@@ -50,7 +50,7 @@ class MapServerInstance with IHttpServer, StartableFunctionality {
   @override
   Future<void> waitFinish() async {
     await initialize();
-    _finishWaiter ??= Completer();
+    _finishWaiter ??= MaxiCompleter();
     await _finishWaiter!.future;
   }
 

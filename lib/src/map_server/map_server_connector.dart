@@ -166,7 +166,7 @@ class MapServerConnector with IHttpRequester, StartableFunctionality, Functional
 
     final taskID = await _newTaskWaiter!.future;
 
-    final completer = Completer<ResponseHttpRequest<String>>();
+    final completer = MaxiCompleter<ResponseHttpRequest<String>>();
     _activeTask[taskID] = completer;
 
     return (taskID, completer);

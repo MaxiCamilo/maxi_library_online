@@ -20,7 +20,7 @@ abstract class HttpServerImplementationWithFinalExecution<T> with IHttpServer{
 
   @override
   Future<void> waitFinish() {
-    _waitFinish ??= Completer();
+    _waitFinish ??= MaxiCompleter();
     return _waitFinish!.future;
   }
 
