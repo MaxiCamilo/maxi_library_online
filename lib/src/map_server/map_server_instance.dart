@@ -108,7 +108,7 @@ class MapServerInstance with IHttpServer, StartableFunctionality {
             '\$type': MapServerPrefix.serverNewTask,
             MapServerPrefix.taskID: id,
           });
-          scheduleMicrotask(() => _createNewTask(id: id, event: event));
+          maxiScheduleMicrotask(() => _createNewTask(id: id, event: event));
           break;
         case MapServerPrefix.clientChannelItem:
           _reactNewItemChannel(event);

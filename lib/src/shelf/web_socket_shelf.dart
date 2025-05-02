@@ -156,7 +156,7 @@ class WebSocketShelf with IChannel, IWebSocket {
       final contentComado = TextUtilities.generateCommand(list: content.map((e) {
         if (e is Map<String, dynamic>) {
           return json.encode(e);
-        } else if (ReflectionUtilities.isPrimitive(e.runtimeType) != null) {
+        } else if (ConverterUtilities.isPrimitive(e.runtimeType) != null) {
           return e.toString();
         }
         final reflItem = ReflectionManager.getReflectionEntity(e.runtimeType);

@@ -33,6 +33,9 @@ class NamedPartRoute with IPartRoute {
       case PrimitiesType.isDateTime:
         namedValues[name] = GeneralConverter(part).toDateTime(propertyName: TranslatedOration(message: name));
         break;
+      case PrimitiesType.isObjectMap:
+        namedValues[name] = GeneralConverter(part).toMapObjeto(propertyName: TranslatedOration(message: name));
+        break;
       case PrimitiesType.isBinary:
         throw NegativeResult(identifier: NegativeResultCodes.implementationFailure, message: Oration(message: '¡Binary interpretation was not created!'));
     }

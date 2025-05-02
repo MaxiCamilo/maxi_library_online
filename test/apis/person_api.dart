@@ -64,7 +64,7 @@ class PersonApi {
 
     controller.done.whenComplete(() => log('Good bye!'));
 
-    scheduleMicrotask(() async {
+    maxiScheduleMicrotask(() async {
       await controller.waitForNewConnection(omitIfAlreadyConnection: true);
       for (int i = 1; i < 60; i++) {
         if (controller.isActive) {
