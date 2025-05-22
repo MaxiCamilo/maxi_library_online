@@ -7,7 +7,7 @@ import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
 import 'package:maxi_library_online/src/map_server/map_server_prefix.dart';
 
-class MapServerConnector with IHttpRequester, StartableFunctionality, FunctionalityWithLifeCycle {
+class MapServerConnector with IHttpRequester, StartableFunctionality, PaternalFunctionality, FunctionalityWithLifeCycle {
   final Stream<Map<String, dynamic>> receiver;
   final StreamSink<Map<String, dynamic>> sender;
 
@@ -26,8 +26,6 @@ class MapServerConnector with IHttpRequester, StartableFunctionality, Functional
     required this.receiver,
     required this.sender,
   });
-
-  
 
   @override
   Future<void> afterInitializingFunctionality() async {
@@ -99,7 +97,7 @@ class MapServerConnector with IHttpRequester, StartableFunctionality, Functional
     }
 
     if (badStatusCodeIsNegativeResult && response.codeResult >= 400) {
-      final error = tryToInterpretError(codeError: response.codeResult, content: response.content, url: url);
+      final error = IHttpRequester.tryToInterpretError(codeError: response.codeResult, content: response.content, url: url);
       if (T == NegativeResult) {
         return ResponseHttpRequest<T>(content: error as T, codeResult: response.codeResult, url: url);
       } else {
