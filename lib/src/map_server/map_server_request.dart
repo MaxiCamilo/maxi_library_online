@@ -27,6 +27,9 @@ class MapServerRequest with IRequest, ICustomSerialization {
   final Map<String, dynamic> valuesInRoute;
 
   @override
+  final Map<String, dynamic> valuesInMiddleware = <String, dynamic>{};
+
+  @override
   bool get isWebSocket => methodType == HttpMethodType.webSocket;
 
   MapServerRequest._(

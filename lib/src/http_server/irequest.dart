@@ -22,6 +22,8 @@ mixin IRequest {
 
   Map<String, dynamic> get valuesInRoute;
 
+  Map<String, dynamic> get valuesInMiddleware;
+
   IHttpServer get server;
 
   bool get isWebSocket;

@@ -19,6 +19,9 @@ class RequestShelf with IRequest {
   @override
   late final Map<String, dynamic> valuesInRoute;
 
+  @override
+  final Map<String, dynamic> valuesInMiddleware = <String, dynamic>{};
+
   RequestShelf({required this.request, required this.server}) {
     valuesInRoute = Map.from(request.url.queryParameters);
 
