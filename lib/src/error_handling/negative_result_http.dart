@@ -6,6 +6,8 @@ class NegativeResultHttp extends NegativeResult {
   final int httpErrorCode;
   final dynamic content;
 
+  static const String labelType = 'error.http';
+
   NegativeResultHttp({
     required super.identifier,
     required super.message,
@@ -14,6 +16,20 @@ class NegativeResultHttp extends NegativeResult {
     super.cause,
     this.content,
   });
+
+  @override
+  Map<String, dynamic> serialize() {
+    final map = super.serialize();
+
+    map['\$type'] = labelType;
+    map['httpCode'] = httpErrorCode;
+
+    if (content != null) {
+      map['content'] = content;
+    }
+
+    return map;
+  }
 
   String generateJson() {
     final map = <String, dynamic>{};
