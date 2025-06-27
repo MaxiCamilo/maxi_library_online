@@ -68,6 +68,12 @@ mixin IRequest {
     return rawValue;
   }
 
+  Future<T> interpretJsonContent<T>({int? maxSize, Encoding? encoding, bool tryToCorrectNames = true}) async {
+    final rawContent = await readContentAsString(encoding: encoding, maxSize: maxSize);
+
+    return ReflectionManager.interpretJson<T>(rawText: rawContent, tryToCorrectNames: tryToCorrectNames);
+  }
+
 /*
   Future<dynamic> createWebSocket({
     required Function(IBidirectionalStream) onConnection,
