@@ -8,7 +8,7 @@ import 'package:maxi_library_online/src/http_server/interfaces/iweb_socket.dart'
 import 'package:shelf/shelf.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
-class WebSocketShelf with IChannel, IWebSocket {
+class WebSocketShelf with IDisposable, IChannel, IWebSocket {
   static Future<Response> makeWebSocket({
     required Request request,
     required Function(IWebSocket) onConnect,
@@ -122,18 +122,14 @@ class WebSocketShelf with IChannel, IWebSocket {
 
   @override
   Future close() async {
-    if (!isActive) {
-      return;
-    }
-    _controllerReceiver.close();
-    return await _webSocket.sink.close();
+    dispose();
   }
 
   @override
-  Future get done => _controllerReceiver.done;
+  Future get done => onDispose;
 
   @override
-  bool get isActive => !_controllerReceiver.isClosed;
+  bool get isActive => !wasDiscarded;
 
   @override
   Stream get receiver => _controllerReceiver.stream;
@@ -176,5 +172,11 @@ class WebSocketShelf with IChannel, IWebSocket {
 
     final reflDio = ReflectionManager.getReflectionEntity(content.runtimeType);
     return reflDio.serializeToJson(value: content, setTypeValue: true);
+  }
+
+  @override
+  void performObjectDiscard() {
+    _controllerReceiver.close();
+    containErrorLogAsync(detail: const Oration(message: 'Dispose web socket sink'), function: () => _webSocket.sink.close());
   }
 }
