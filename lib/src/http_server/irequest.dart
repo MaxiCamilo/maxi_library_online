@@ -89,10 +89,10 @@ mixin IRequest {
     return ReflectionManager.interpretJson<T>(rawText: rawContent, tryToCorrectNames: tryToCorrectNames);
   }
 
-  Future<List<T>> interpretJsonList<T>({int? maxSize, Encoding? encoding, bool tryToCorrectNames = true}) async {
+  Future<List<T>> interpretJsonList<T>({int? maxSize, Encoding? encoding, bool tryToCorrectNames = true, bool primaryKeyMustBePresent = true}) async {
     final rawContent = await readContentAsString(encoding: encoding, maxSize: maxSize);
 
-    return ReflectionManager.interpretJsonList<T>(rawText: rawContent, tryToCorrectNames: tryToCorrectNames);
+    return ReflectionManager.interpretJsonList<T>(rawText: rawContent, tryToCorrectNames: tryToCorrectNames, primaryKeyMustBePresent: primaryKeyMustBePresent);
   }
 
 /*
