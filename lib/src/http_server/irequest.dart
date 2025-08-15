@@ -83,6 +83,21 @@ mixin IRequest {
     return rawValue;
   }
 
+  int getRequiredNumberParameter({required String name}) {
+    final rawValue = getOptionalNumberParameter(name: name);
+    if (rawValue == null) {
+      throw NegativeResult(
+        identifier: NegativeResultCodes.invalidFunctionality,
+        message: Oration(
+          message: 'Parameter %1 is required in the URL',
+          textParts: [name],
+        ),
+      );
+    }
+
+    return rawValue;
+  }
+
   Future<T> interpretJsonContent<T>({int? maxSize, Encoding? encoding, bool tryToCorrectNames = true}) async {
     final rawContent = await readContentAsString(encoding: encoding, maxSize: maxSize);
 
