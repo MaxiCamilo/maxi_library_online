@@ -123,6 +123,8 @@ class HttpServerShelf extends HttpServerImplementationWithFinalExecution<Respons
       final contentComado = TextUtilities.generateCommand(list: content.map((e) {
         if (e is Map<String, dynamic>) {
           return json.encode(e);
+        } else if (e is String) {
+          return '"$e"';
         } else if (ConverterUtilities.isPrimitive(e.runtimeType) != null) {
           return e.toString();
         }

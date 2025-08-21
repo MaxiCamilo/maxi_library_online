@@ -7,7 +7,7 @@ import 'package:maxi_library/maxi_library.dart';
 import 'package:maxi_library_online/maxi_library_online.dart';
 import 'package:maxi_library_online/src/map_server/map_server_prefix.dart';
 
-class MapServerConnector with IHttpRequester, StartableFunctionality, PaternalFunctionality, FunctionalityWithLifeCycle {
+class MapServerConnector with StartableFunctionality, PaternalFunctionality, IHttpRequester, FunctionalityWithLifeCycle {
   final Stream<Map<String, dynamic>> receiver;
   final StreamSink<Map<String, dynamic>> sender;
 
@@ -173,6 +173,7 @@ class MapServerConnector with IHttpRequester, StartableFunctionality, PaternalFu
   @override
   Future<IChannel> executeWebSocket({
     required String url,
+    Map<String, String> queryParameters = const {},
     bool disableIfNoOneListens = true,
     Map<String, String>? headers,
     Encoding? encoding,
